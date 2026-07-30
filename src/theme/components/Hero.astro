@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets'
+import config from 'virtual:starlight-theme-commit-moi/config'
+
+/* Splash hero for docs.commit.moi — continuous with the landing page:
+   marketing-register Lora (400 + italic), the anthem, two actions, and the
+   app mockup in macOS-style window chrome. Wrap the emphasised words of the
+   title in <em> in front-matter to get the accent italic. */
+const { data } = Astro.locals.starlightRoute.entry
+const { title = data.title, tagline, image, actions = [] } = data.hero ?? {}
+---
+
+<div class="hero">
+  <div class="sl-flex copy">
+    <h1 id="_top" set:html={title} />
+    {tagline && <div class="tagline" set:html={tagline} />}
+    {config.anthem && <p class="cm-hero-anthem">{config.anthem}</p>}
+    {
+      actions.length > 0 && (
+        <div class="sl-flex actions">
+          {actions.map(({ attrs, link: href, text, variant }) => (
+            <a class:list={['sl-link-button', variant ?? 'primary']} {href} {...attrs}>
+              <span set:html={text} />
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+
+  <div class="sl-flex hero-html">
+    {
+      image?.file ? (
+        <Image src={image.file} alt={image.alt || ''} width={640} densities={[1.5, 2]} />
+      ) : image?.html ? (
+        <div class="cm-mockup" set:html={image.html} />
+      ) : (
+        <div class="cm-mockup" aria-hidden="true">
+          <div class="chrome"><i></i><i></i><i></i></div>
+          <div class="cm-mockup-body">
+            <div class="cm-mockup-rail">
+              <span class="cm-mockup-word">commit<b>.moi</b></span>
+              <span class="row is-current">Today</span>
+              <span class="row">Upcoming</span>
+              <span class="row">Anytime</span>
+              <span class="row">Logbook</span>
+            </div>
+            <div class="cm-mockup-list">
+              <span class="cm-mockup-title">Today</span>
+              <span class="task"><i class="check"></i>Read the docs, once</span>
+              <span class="task"><i class="check"></i>Move the cookbook to its own space</span>
+              <span class="task"><i class="check"></i>Email the plumber</span>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  /* Mockup internals only — every colour is a design-system token. */
+  .cm-mockup-body { display: grid; grid-template-columns: 92px 1fr; min-height: 208px; }
+  .cm-mockup-rail { display: flex; flex-direction: column; gap: 6px; padding: 14px 10px; background: var(--bg); border-inline-end: 1px solid var(--border); }
+  .cm-mockup-word { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--accent); margin-bottom: 8px; }
+  .cm-mockup-word b { color: var(--fg1); font-weight: 700; }
+  .cm-mockup-rail .row { font-size: 10.5px; color: var(--fg3); padding: 3px 6px; border-radius: var(--radius-xs); border-inline-start: 2px solid transparent; }
+  .cm-mockup-rail .row.is-current { color: var(--accent); background: var(--accent-tint); border-inline-start-color: var(--accent); }
+  .cm-mockup-list { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; }
+  .cm-mockup-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--fg1); margin-bottom: 4px; }
+  .cm-mockup-list .task { display: flex; align-items: center; gap: 9px; font-size: 11.5px; color: var(--fg2); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 7px 10px; }
+  .cm-mockup-list .check { width: 11px; height: 11px; border: 1.5px solid var(--accent-mid); border-radius: var(--radius-full); flex: none; }
+</style>

@@ -1,0 +1,72 @@
+---
+import Default from '@astrojs/starlight/components/Sidebar.astro'
+import config from 'virtual:starlight-theme-commit-moi/config'
+
+const { locale } = Astro.locals.starlightRoute
+const home = locale ? `/${locale}/` : '/'
+---
+
+{/* The wordmark lives in the sidebar on desktop — the app's own arrangement. */}
+<a href={home} class="cm-sidebar-lockup">
+  <span class="cm-mark" aria-hidden="true">
+    <span class="c">c</span><span class="rule"></span><span class="node"></span>
+  </span>
+  <span class="cm-wordmark">commit<span class="tld">.moi</span></span>
+</a>
+
+<Default><slot /></Default>
+
+{
+  (config.accentSwitch || config.trustLine) && (
+    <div class="cm-sidebar-foot">
+      {config.accentSwitch && (
+        <div class="cm-accent-switch" role="group" aria-label="Accent colour">
+          <span class="label">Accent</span>
+          <button
+            type="button"
+            class="cm-accent-dot"
+            data-accent-value="steel"
+            aria-pressed="false"
+            title="Steel blue"
+          >
+            <span class="sr-only">Steel blue</span>
+          </button>
+          <button
+            type="button"
+            class="cm-accent-dot"
+            data-accent-value="forest"
+            aria-pressed="false"
+            title="Forest"
+          >
+            <span class="sr-only">Forest</span>
+          </button>
+        </div>
+      )}
+      {config.trustLine && <p class="cm-trust">{config.trustLine}</p>}
+    </div>
+  )
+}
+
+<script is:inline>
+  (() => {
+    const dots = document.querySelectorAll('.cm-accent-dot')
+    if (!dots.length) return
+    const current = () => (document.body.dataset.theme === 'forest' ? 'forest' : 'steel')
+    const sync = () =>
+      dots.forEach((dot) =>
+        dot.setAttribute('aria-pressed', String(dot.dataset.accentValue === current())),
+      )
+    dots.forEach((dot) =>
+      dot.addEventListener('click', () => {
+        const value = dot.dataset.accentValue
+        if (value === 'forest') document.body.dataset.theme = 'forest'
+        else delete document.body.dataset.theme
+        try {
+          localStorage.setItem('commit-moi-accent', value)
+        } catch {}
+        sync()
+      }),
+    )
+    sync()
+  })()
+</script>

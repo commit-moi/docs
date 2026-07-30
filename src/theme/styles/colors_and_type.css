@@ -1,0 +1,486 @@
+/* ============================================================
+   commit.moi — Design Tokens
+   "Your life, organized at last."
+   Minimalist personal productivity (Things 3 aesthetic).
+   Source of truth: commit-moi/devapp (CLAUDE.md + components).
+   ============================================================ */
+
+/* ---- Fonts ----------------------------------------------------
+   All three families SELF-HOSTED from /fonts (brand-supplied).
+   Lora    — serif, wordmark + headings (variable: upright + italic, 400–700)
+   DM Sans — humanist sans, all UI/body  (variable: opsz 9–40, wght 300–700)
+   DM Mono — repo/code identifiers        (400 + 500, upright + italic)
+   No CDN dependency — fully offline-capable.
+--------------------------------------------------------------- */
+
+/* Lora — variable upright (weight axis 400–700) */
+@font-face {
+  font-family: 'Lora';
+  src: url('fonts/Lora-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* Lora — variable italic (weight axis 400–700) */
+@font-face {
+  font-family: 'Lora';
+  src: url('fonts/Lora-Italic-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 400 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* DM Sans — variable upright (optical-size + weight axes) */
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/DMSans-VariableFont_opsz,wght.ttf') format('truetype-variations');
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+}
+/* DM Sans — variable italic */
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/DMSans-Italic-VariableFont_opsz,wght.ttf') format('truetype-variations');
+  font-weight: 100 1000;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* DM Mono — 400 upright / italic, 500 medium */
+@font-face {
+  font-family: 'DM Mono';
+  src: url('fonts/DMMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Mono';
+  src: url('fonts/DMMono-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Mono';
+  src: url('fonts/DMMono-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ---- Brand / accent ---------------------------------------
+     Steel blue. User-switchable per theme in-app; this is the
+     default. Used for the ".commit" wordmark, active nav, links,
+     primary buttons. */
+  --accent:        #3D6B8E;   /* primary accent (steel blue) */
+  --accent-hover:  #345D7B;   /* darker, for press/hover on solids */
+  --accent-tint:   rgba(61, 107, 142, 0.05); /* active-nav wash */
+  --accent-tint-12:rgba(61, 107, 142, 0.12); /* selection / focus ring */
+  --accent-light:  #E5EFF5;   /* pale-blue pill / chip background */
+  --accent-mid:    #7AAEC8;   /* focus-border blue, repo dots */
+  --accent-alt:    #4A7C59;   /* opposite-theme accent (calendar "today" dot); flips under [data-theme] */
+  --on-accent:     #FFFFFF;   /* text/icons on a solid --accent fill (primary buttons) */
+
+  /* Forest — the alternate brand/theme color (logo "forest" variant)
+     and the success/confirmation green. Selecting the Forest THEME
+     swaps --accent and its supporting ramp to these values app-wide
+     (accent, buttons, sidebar nav, task checks, links, focus, icons,
+     logo). Paper / ink / hairlines are unaffected. */
+  --steel:         #3D6B8E;   /* stable steel brand color (theme-independent) — theme swatches */
+  --steel-hover:   #345D7B;   /* stable steel ramp (mirrors --forest-hover/-focus/-tint) */
+  --steel-focus:   #7AAEC8;
+  --steel-tint:    #E5EFF5;
+  --forest:        #4A7C59;
+  --forest-hover:  #3D684A;   /* darker, press/hover on solids */
+  --forest-focus:  #8FB89B;   /* focus border */
+  --forest-tint:   #E7F0E9;   /* pale-green pill / active-nav wash */
+
+  /* ---- Surfaces ---------------------------------------------- */
+  --bg:            #F8F6F1;   /* app background — warm paper cream */
+  --surface:       #FFFFFF;   /* cards, modals, raised panels */
+  --surface-sunken:#E4E0D8;   /* alt section fill / hover rows — the hover wash (was #F0EDE8; bumped to the old --border value so hovers read on compact controls too) */
+  --surface-dark:  #1A1917;   /* inverted sections (your-data, spaces) */
+
+  /* ---- Ink (text) — a WARM ramp, not neutral grey ----------- */
+  --fg1:           #1A1917;   /* primary text — warm near-black */
+  --fg2:           #4A4740;   /* secondary / body copy (warm) */
+  --fg3:           #8C8A84;   /* tertiary / captions, meta, footers (warm) */
+  --fg-muted:      rgba(26, 25, 23, 0.40); /* empty-state, placeholders */
+  --fg-on-dark:    #9A9890;   /* body text on dark inverted sections */
+
+  /* ---- Lines ------------------------------------------------- */
+  --border:        #DEDAD0;   /* hairline dividers, sidebar edge, card border (mid tone between the old --border #E4E0D8 and --border-strong, so it still reads once --surface-sunken took the old value) */
+  --border-strong: #D8D3C8;   /* heavier rule when needed */
+
+  /* ---- Responsive layout budget -----------------------------
+     Single source for every breakpoint + fixed chrome width. app.jsx reads these
+     off :root (getComputedStyle) so app logic and CSS never diverge; devapp
+     mirrors them into lib/constants.ts. The two breakpoints are DELIBERATELY
+     different values: sidebar rail↔full at 960, TaskDetail dock↔sheet at 1080. */
+  --bp-bottom:      640px;  /* viewport < : sidebar → bottom tab bar */
+  --bp-rail:        960px;  /* viewport 640–960 : collapsed rail · > : full sidebar */
+  --bp-detail:     1080px;  /* viewport ≥ : TaskDetail docks (reflow) · < : full-screen sheet */
+  --sidebar-w:      220px;  /* full sidebar */
+  --rail-w:          64px;  /* collapsed icon rail (canonical — supersedes the old 52px) */
+  --detail-panel-w: 440px;  /* docked TaskDetail / slide-over width */
+  --list-min-w:     400px;  /* task-list readable floor — panel SHEETS rather than squeeze below this */
+  --list-compact-w: 560px;  /* task-list container width below which rows use the compact grid */
+  --list-max-w:     880px;  /* UPPER bound: the task-list content column (header + composer + rows) stops growing here — at the cap a row is ~816px (880 − 64px page padding) = the optimal, title ~444px. Wider viewports gutter, they don't stretch. */
+
+  /* ---- Semantic / status ------------------------------------ */
+  --warn-bg:       #FFF8E7;   /* re-auth banner background */
+  --warn-border:   #F0B429;   /* warning accent */
+  --warn-fg:       #8A5C00;   /* warning text (rate-limit toast) */
+  --warn-tint:     rgba(138, 92, 0, 0.10);
+
+  --error-bg:      #FEF3F2;
+  --error-border:  #FECAC3;
+  --error-fg:      #D32F2F;   /* canonical error red — DATA-VIZ negatives only
+                                (finance net / over-budget, portfolio losses,
+                                "name taken"). Cooler/hotter than --sync-error. */
+
+  /* Overdue task — a task past its due date and not done. The row border +
+     check ring take the Personal-red HUE; the title + due date take the
+     canonical error-red TEXT. Aliases (not new hexes) so there is one source:
+     if either red moves, overdue follows. */
+  --overdue-line:  var(--area-personal);   /* row border + check circle (#EA4335 hue) */
+  --overdue-fg:    var(--error-fg);         /* task title + due date text (#D32F2F) */
+
+  /* Action / sync failure — a distinct WARM brick red, deliberately NOT
+     --error-fg (#254). Used on write/optimistic-sync failures: the task-row
+     cloud-off marker, the composer inline-error banner + icon, the error-toast
+     icon, and destructive actions (sign out). Its 7% / 28% / 40% alpha tints
+     are derived from this one value via color-mix, so there is a single source. */
+  --sync-error:    #B24848;
+
+  /* Toast pill backgrounds — solid pastels, ink (--fg1) text sits on both.
+     Info/success = mint; error = rose. (Network/neutral toast uses the dark
+     pill via --neutral-toast below.) */
+  --toast-info-bg: #B6F8C4;
+  --toast-error-bg:#FFB7B7;
+
+  --neutral-toast: rgba(26, 25, 23, 0.08); /* network-error toast */
+  --scrim:         rgba(26, 25, 23, 0.18); /* modal / slide-over backdrop */
+  --scrim-strong:  rgba(26, 25, 23, 0.42); /* command-palette backdrop (darker than modal scrim) */
+
+  /* ---- Area labels (map 1:1 to GitHub issue-label colors) ----
+     Tasks are GitHub Issues; "Areas" are coloured labels. */
+  --area-work:     #4285F4;   /* Work */
+  --area-personal: #EA4335;   /* Personal */
+  --area-health:   #34A853;   /* Health */
+  --area-finance:  #FBBC04;   /* Finance */
+  --area-learning: #FF6D00;   /* Learning */
+
+  /* ---- Space identity colors --------------------------------
+     Each Space has ONE identity color used consistently for both
+     its accent DOT and its TAG chip (chip = soft tint bg + the
+     same color as readable fg). Same space → same color.
+     These are content identity, independent of the app theme. */
+  --space-tasks:     #3D6B8E;  /* steel blue  */
+  --space-work:      #2E4E9A;  /* indigo      */
+  --space-personal:  #9A4E2E;  /* terracotta  */
+  --space-cookbook:  #8A5C00;  /* amber       */
+  --space-journal:   #6B3E8E;  /* plum        */
+  --space-contacts:  #3E7D7A;  /* teal        */
+  --space-log:       #A03D5B;  /* rose        */
+  --space-pipeline:  #5B6B7A;  /* slate       */
+  --space-finance:   #3E7D5B;  /* pine green  */
+  --space-portfolio: #4A6B8E;  /* dusk blue   */
+  --space-catalog:   #7A5C3A;  /* bronze      */
+  --space-notes:     #6B3E8E;  /* plum — shares journal's hue */
+
+  /* Tag chip tints (bg). Foreground uses the matching --space-* */
+  --tag-tasks-bg:    #E6EFF6;
+  --tag-work-bg:     #E6EDFF;
+  --tag-personal-bg: #FBEDE4;
+  --tag-cookbook-bg: #FCF4DC;
+  --tag-journal-bg:  #F1E9F6;
+
+  /* Back-compat aliases (dots) — now point at the unified set */
+  --repo-tasks:    var(--space-tasks);
+  --repo-work:     var(--space-work);
+  --repo-cookbook: var(--space-cookbook);
+  --repo-journal:  var(--space-journal);
+
+  /* ---- Typography families ---------------------------------- */
+  --font-display:  'Lora', Georgia, 'Times New Roman', serif;
+  --font-ui:       'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:     'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ---- Type scale (UI is DM Sans; display is Lora) ----------
+     Compact, calm. Headings carry -0.5px tracking. */
+  --text-2xs:  11px;  /* space tag / repo-tint pill */
+  --text-xs:   12px;  /* meta, footers, label chips */
+  --text-sm:   13px;  /* secondary buttons, dense UI */
+  --text-base: 15px;  /* body / list rows */
+  --text-md:   16px;  /* lead paragraph, primary button */
+  --text-lg:   18px;  /* mobile header title */
+  --text-xl:   20px;  /* sidebar wordmark, section headers */
+  --text-2xl:  28px;  /* page / email headings */
+  --text-3xl:  32px;  /* hero wordmark */
+  --text-4xl:  44px;  /* marketing hero */
+
+  --leading-tight: 1.2;
+  --leading-snug:  1.4;
+  --leading-body:  1.6;
+
+  --tracking-tight: -0.5px;  /* app wordmark + UI headings */
+  --tracking-hero:  -1.2px;  /* large marketing display headings */
+  --tracking-normal: 0;
+
+  /* ---- Display weight note ----------------------------------
+     Lora has two registers in this brand:
+       • Marketing / landing  — Lora 400 (regular) + ITALIC for
+         emphasis (hero "organized at last" is blue italic).
+       • App & emails        — Lora 700 (bold) for the wordmark
+         and page titles.
+     Use --weight-display-marketing vs --weight-display-app. */
+  --weight-display-marketing: 400;
+  --weight-display-app: 700;
+
+  /* ---- Radii ------------------------------------------------- */
+  --radius-xs: 2px;   /* nav items (rounded-sm) */
+  --radius-sm: 4px;   /* toasts, chips */
+  --radius-md: 8px;   /* buttons, inputs, banners */
+  --radius-lg: 12px;  /* cards, modals, email shell */
+  --radius-full: 9999px; /* avatars, pills */
+
+  /* ---- Spacing (4pt base; generous whitespace) -------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Elevation --------------------------------------------
+     Restrained. The aesthetic favors hairline borders over
+     heavy shadows. Cards float on at most a soft, low shadow. */
+  --shadow-sm: 0 1px 2px rgba(26, 25, 23, 0.04);
+  --shadow-md: 0 4px 16px rgba(26, 25, 23, 0.06);
+  --shadow-lg: 0 12px 32px rgba(26, 25, 23, 0.08);
+  --shadow-panel: -12px 0 32px rgba(26, 25, 23, 0.08); /* right slide-over, left-cast */
+  --shadow-menu: 0 12px 32px -8px rgba(26, 25, 23, 0.28); /* popover / dropdown menu */
+  --shadow-modal: 0 24px 64px rgba(26, 25, 23, 0.18); /* centered modal dialog */
+  --shadow-sheet: 0 -12px 32px rgba(26, 25, 23, 0.08); /* mobile bottom sheet (upward cast) */
+  --shadow-palette: 0 24px 64px -16px rgba(26, 25, 23, 0.34), 0 6px 16px rgba(26, 25, 23, 0.10); /* command palette */
+  --shadow-toast: 0 10px 30px -8px rgba(26, 25, 23, 0.20); /* toast pill */
+  --shadow-focus: 0 0 0 3px var(--accent-tint-12);
+
+  /* ---- Motion -----------------------------------------------
+     Quiet. Opacity/colour fades, ~180–220ms, ease. No bounces. */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --dur-fast: 150ms; /* @kind other */
+  --dur:      200ms; /* @kind other */
+  --layout-sidebar: 220px;
+}
+
+/* ============================================================
+   Forest THEME override. Selecting Forest swaps the ACCENT RAMP
+   (and only the accent ramp) app-wide; paper / ink / hairlines are
+   unaffected. This is the canonical block consumers mirror — devapp's
+   app/globals.css must carry an identical [data-theme="forest"] block
+   or its CI token-match check fails. Every token here also exists in
+   :root above; nothing new is declared, only re-valued.
+   ============================================================ */
+[data-theme="forest"] {
+  --accent:        #4A7C59;   /* forest green (was steel blue) */
+  --accent-hover:  #3D684A;   /* darker, press/hover on solids */
+  --accent-tint:   rgba(74, 124, 89, 0.07); /* active-nav wash */
+  --accent-tint-12:rgba(74, 124, 89, 0.16); /* selection / focus ring */
+  --accent-light:  #E7F0E9;   /* pale-GREEN pill / chip background (was pale blue) */
+  --accent-mid:    #8FB89B;   /* focus border, repo dots */
+  --accent-alt:    #3D6B8E;   /* opposite-theme accent — steel (calendar "today" dot) */
+}
+
+/* ============================================================
+   Semantic element styles — apply directly or copy into a kit.
+   ============================================================ */
+
+.ds-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--fg1);
+}
+
+.ds-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--fg1);
+}
+
+.ds-h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  color: var(--fg1);
+}
+
+.ds-lead {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--fg2);
+}
+
+.ds-body {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--fg1);
+}
+
+.ds-meta {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--fg3);
+}
+
+.ds-code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+/* Wordmark — used in sidebar, login, emails */
+.ds-wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg1);
+}
+.ds-wordmark .accent { color: var(--accent); }
+
+/* Primary button */
+.ds-btn {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--on-accent);
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 32px;
+  cursor: pointer;
+  transition: opacity var(--dur) var(--ease);
+}
+.ds-btn:hover { opacity: 0.9; }
+.ds-btn:active { background: var(--accent-hover); opacity: 1; }
+
+/* ============================================================
+   Logo — the app-icon mark. A rounded square holding a serif
+   Lora "c", a faint vertical rule, and a commit "node" dot on
+   the right (the git-graph motif). Reproducible in pure CSS so
+   it scales to any size & theme. PNG renders live in assets/.
+     <span class="ds-logo" style="--logo-size:40px">
+       <span class="c">c</span><span class="line"></span><span class="node"></span>
+     </span>
+   Set --logo-bg to var(--forest) for the forest variant.
+   ============================================================ */
+.ds-logo {
+  --logo-size: 40px;
+  --logo-bg: var(--accent);
+  position: relative;
+  display: inline-block;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  border-radius: calc(var(--logo-size) * 0.25);
+  background: var(--logo-bg);
+  overflow: hidden;
+  flex: none;
+}
+.ds-logo .c {
+  position: absolute;
+  left: calc(var(--logo-size) * 0.09);
+  top: 45%;
+  transform: translateY(-55%);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: calc(var(--logo-size) * 0.95);
+  line-height: 1;
+  color: #fff;
+  z-index: 2;
+}
+.ds-logo .line {
+  position: absolute;
+  right: calc(var(--logo-size) * 0.225);
+  top: 0; bottom: 0;
+  width: max(1.5px, calc(var(--logo-size) * 0.05));
+  background: rgba(255, 255, 255, 0.28);
+}
+.ds-logo .node {
+  position: absolute;
+  right: calc(var(--logo-size) * 0.125);
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(var(--logo-size) * 0.2);
+  height: calc(var(--logo-size) * 0.2);
+  border-radius: 9999px;
+  background: #fff;
+  border: 1.5px solid var(--logo-bg);
+  z-index: 3;
+}
+
+/* Wordmark set in marketing weight (Lora 400) — pairs with the mark */
+.ds-wordmark-light {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.6px;
+  color: var(--fg1);
+}
+.ds-wordmark-light .accent { color: var(--accent); }
+
+/* Space tag chip */
+.ds-tag {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.ds-tag.tasks    { background: var(--tag-tasks-bg);    color: var(--space-tasks); }
+.ds-tag.work     { background: var(--tag-work-bg);     color: var(--space-work); }
+.ds-tag.personal { background: var(--tag-personal-bg); color: var(--space-personal); }
+.ds-tag.cookbook { background: var(--tag-cookbook-bg); color: var(--space-cookbook); }
+.ds-tag.journal  { background: var(--tag-journal-bg);  color: var(--space-journal); }
+
+/* ============================================================
+   Loading skeleton — shimmer placeholder for lists/rows that
+   are fetching (e.g. the sidebar Projects section). Reduced-
+   motion users get a static muted block instead of the pulse.
+   ============================================================ */
+@keyframes commit-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 0.25; }
+}
+.ds-skeleton {
+  display: inline-block;
+  background: var(--border-strong);
+  border-radius: 6px;
+  animation: commit-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-skeleton { animation: none; opacity: 0.4; }
+}
+
+/* Sync-pending mark — a gently pulsing "in flight" indicator for an optimistic
+   task row awaiting its GitHub write. Same calm pulse as the skeleton (no spin),
+   reduced-motion-safe. Failed sync uses a static red cloud-off, not this. */
+.ds-sync-pulse { animation: commit-pulse 1.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .ds-sync-pulse { animation: none; opacity: 0.7; }
+}

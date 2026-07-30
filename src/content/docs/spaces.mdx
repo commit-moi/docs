@@ -1,0 +1,99 @@
+---
+title: Spaces
+description: Every space is a private repository you own. Group your life the way you actually live it.
+---
+
+import { Steps, CardGrid, Card, LinkCard, Aside } from '@astrojs/starlight/components';
+
+A space is one private GitHub repository. The tasks inside it are issues, its
+areas are labels, its projects are milestones. There is no other layer. You can
+open a space on github.com and read every byte of it.
+
+Most people start with one space — `commit-tasks` — and add more when a part of
+life deserves its own drawer.
+
+<Aside type="note" title="Spaces are shareable one at a time">
+Share a cookbook with your family and keep work private. Each space is its own
+repository, so its collaborators are its own too.
+</Aside>
+
+## What a space is made of
+
+Every concept in commit.moi maps onto something GitHub already had. Nothing is
+translated, stored twice, or invented.
+
+| In the app | On GitHub |
+| --- | --- |
+| Space | `private repository` |
+| Task | `issue` |
+| Area | `label` |
+| Project | `milestone` |
+| Logbook | `closed issues` |
+
+## Create a space
+
+<Steps>
+
+1. ### Open the Spaces switcher
+
+   In the sidebar, or press <kbd>⌘</kbd> <kbd>K</kbd> and type “new space”.
+
+2. ### Name it
+
+   The name becomes the repository name, prefixed for you. A cookbook becomes
+   `commit-cookbook`.
+
+3. ### Pick a type
+
+   The type decides the screens you get and how records are stored — as issues,
+   or as Markdown files with front matter.
+
+</Steps>
+
+A data space keeps one Markdown file per record — readable, greppable,
+diffable:
+
+```md title="recipes/pan-con-tomate.md"
+---
+title: Pan con tomate
+servings: 2
+time: 10m
+tags: [breakfast, summer]
+---
+
+Rub the tomato into the bread. Salt. Oil. Done.
+```
+
+## Types of space
+
+Ten types ship today. Four of the most-used:
+
+<CardGrid>
+  <Card title="Tasks" icon="check">
+    Inbox, Today, Upcoming, Anytime, Someday, Logbook. The default space.
+  </Card>
+  <Card title="Cookbook" icon="open-book">
+    Recipes with time, servings, difficulty and a shopping list.
+  </Card>
+  <Card title="Journal" icon="pencil">
+    One dated entry a day — mood, tags, photos, Markdown body.
+  </Card>
+  <Card title="Notes" icon="seti:notebook">
+    A Zettelkasten with `[[wikilinks]]` and backlinks between notes.
+  </Card>
+</CardGrid>
+
+## Share a space
+
+Sharing a space is a GitHub collaborator invite — the same one you would send
+for any repository. Revoke it there and it is revoked here.
+
+<Aside type="tip" title="Check our work">
+Trust isn't a promise here. Open the repo and check.
+</Aside>
+
+<LinkCard
+  title="Your data & GitHub"
+  href="/your-data-and-github/"
+  description="What we store, what we never touch, and how to leave with everything."
+/>

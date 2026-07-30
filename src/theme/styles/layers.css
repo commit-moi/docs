@@ -1,0 +1,4 @@
+/* Layer order: everything Starlight ships stays in `starlight`, everything this
+   theme adds goes in `commit-moi` — so our declarations win without !important
+   and without specificity games. Loaded FIRST of the theme's stylesheets. */
+@layer starlight, commit-moi;

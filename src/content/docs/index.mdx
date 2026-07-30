@@ -1,0 +1,37 @@
+---
+title: commit.moi docs
+description: The user guide for commit.moi — the calm task manager whose only database is your own GitHub account.
+template: splash
+hero:
+  title: Your life, <em>organized at last.</em>
+  tagline: The user guide for commit.moi — the calm task manager whose only database is your own GitHub account.
+  actions:
+    - text: Get started
+      link: /getting-started/
+      variant: primary
+    - text: How your data works
+      link: /your-data-and-github/
+      variant: secondary
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Start here
+
+<CardGrid>
+  <LinkCard title="Getting started" href="/getting-started/" description="Sign in with GitHub, get your first space, capture your first task. Four minutes." />
+  <LinkCard title="Tasks & areas" href="/tasks-and-areas/" description="Inbox, Today, Upcoming, Anytime, Someday, Logbook — and the labels that cut across them." />
+  <LinkCard title="Spaces" href="/spaces/" description="One private repo per part of your life. Tasks, cookbook, journal, notes." />
+  <LinkCard title="Projects" href="/projects/" description="Milestones with a progress ring — a place for tasks that belong together." />
+</CardGrid>
+
+## Everything else
+
+<CardGrid>
+  <LinkCard title="Email capture" href="/email-capture/" description="Forward anything to assistant@commit.moi." />
+  <LinkCard title="Keyboard shortcuts" href="/keyboard-shortcuts/" description="⌘K, and the ten keys that matter." />
+  <LinkCard title="Your data & GitHub" href="/your-data-and-github/" description="What we store. What we never touch." />
+  <LinkCard title="Account & settings" href="/account-and-settings/" description="Theme, dates, timezone, signing out." />
+  <LinkCard title="Troubleshooting" href="/troubleshooting/" description="When GitHub is unreachable or a write fails." />
+  <LinkCard title="Changelog" href="/changelog/" description="What shipped, newest first." />
+</CardGrid>

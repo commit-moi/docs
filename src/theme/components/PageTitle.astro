@@ -1,0 +1,11 @@
+---
+/* Lora 700 title + the page description as a deck line — the only serif in
+   the content column. */
+const { entry } = Astro.locals.starlightRoute
+const description = entry.data.description
+---
+
+<div class="cm-page-header">
+  <h1 id="_top" class="cm-page-title"><slot /></h1>
+  {description && <p class="cm-page-description">{description}</p>}
+</div>

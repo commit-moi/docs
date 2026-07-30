@@ -1,0 +1,22 @@
+---
+import Default from '@astrojs/starlight/components/Banner.astro'
+import config from 'virtual:starlight-theme-commit-moi/config'
+---
+
+<Default><slot /></Default>
+
+{/* First element inside <body>, so the accent is set before anything paints.
+    The swap itself is the design system's own `[data-theme="forest"]` block —
+    applied to <body> because Starlight owns <html data-theme> for light/dark.
+    No accent value is re-declared anywhere in this theme. */}
+<script is:inline data-cm-accent={config.accent}>
+  (() => {
+    let accent = document.currentScript?.dataset.cmAccent || 'steel'
+    try {
+      const saved = localStorage.getItem('commit-moi-accent')
+      if (saved === 'steel' || saved === 'forest') accent = saved
+    } catch {}
+    if (accent === 'forest') document.body.dataset.theme = 'forest'
+    else delete document.body.dataset.theme
+  })()
+</script>

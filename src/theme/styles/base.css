@@ -1,0 +1,244 @@
+/* ============================================================
+   commit.moi docs — structural layer
+   Shapes Starlight's chrome into the app's vocabulary: warm paper
+   everywhere, hairlines instead of shadows, 2px nav rows with a 3px
+   accent left border when active, Lora for page titles only, DM Sans
+   500 for in-page headings, quiet 150–200ms fades. Nothing here
+   introduces a colour — every value comes from tokens.css.
+
+   Starlight's own desktop breakpoint is 50rem; this file uses it too
+   so the two layouts never disagree.
+   ============================================================ */
+@layer commit-moi {
+  /* ─────────── page frame ─────────── */
+  body { background: var(--bg); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  html { scrollbar-gutter: stable; }
+  :focus-visible { outline: 2px solid var(--accent-mid); outline-offset: 2px; }
+
+  /* ─────────── header ───────────
+     Paper, one hairline, no shadow. On desktop the wordmark lives at the
+     top of the sidebar (Sidebar override), so the header's title slot is
+     hidden and the bar carries only search + links. */
+  .header { border-bottom: 1px solid var(--border); background: var(--bg); box-shadow: none; padding-inline: 20px; }
+  .header > .sl-flex { gap: 16px; align-items: center; }
+  .site-title { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: var(--tracking-tight); color: var(--fg1); gap: 9px; }
+  @media (min-width: 50rem) { .site-title { display: none; } }
+
+  /* ─────────── the mark (pure-CSS app icon) ───────────
+     Mirrors the design system's `.ds-logo` helper: rounded square, serif
+     "c", a faint rule, and the commit node dot. */
+  .cm-mark { --mark-size: 28px; position: relative; display: inline-block; width: var(--mark-size); height: var(--mark-size); border-radius: calc(var(--mark-size) * 0.25); background: var(--accent); overflow: hidden; flex: none; }
+  .cm-mark .c { position: absolute; left: calc(var(--mark-size) * 0.09); top: 45%; transform: translateY(-55%); font-family: var(--font-display); font-weight: 400; font-size: calc(var(--mark-size) * 0.95); line-height: 1; color: #fff; z-index: 2; }
+  .cm-mark .rule { position: absolute; right: calc(var(--mark-size) * 0.225); top: 0; bottom: 0; width: max(1.5px, calc(var(--mark-size) * 0.05)); background: rgba(255, 255, 255, 0.28); }
+  .cm-mark .node { position: absolute; right: calc(var(--mark-size) * 0.125); top: 50%; transform: translateY(-50%); width: calc(var(--mark-size) * 0.2); height: calc(var(--mark-size) * 0.2); border-radius: var(--radius-full); background: #fff; border: 1.5px solid var(--accent); z-index: 3; }
+  .cm-wordmark { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: var(--tracking-tight); color: var(--accent); }
+  .cm-wordmark .tld { color: var(--fg1); }
+
+  /* ─────────── search ───────────
+     A white input-shaped affordance, not a button. Same 8px radius and
+     hairline as the app's composer. */
+  site-search > button[data-open-modal] { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--fg3); font-family: var(--font-ui); font-size: 13px; font-weight: 400; height: 34px; padding-inline: 12px; gap: 8px; transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+  site-search > button[data-open-modal]:hover { border-color: var(--border-strong); color: var(--fg2); }
+  site-search > button[data-open-modal] > kbd { background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--fg3); font-family: var(--font-mono); font-size: 11px; padding: 1px 5px; }
+  site-search > button[data-open-modal] > kbd kbd { border: 0; padding: 0; }
+  @media (min-width: 50rem) { site-search > button[data-open-modal] { width: 240px; justify-content: flex-start; } }
+  site-search .dialog-frame { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-modal); padding: 16px; }
+  site-search dialog { background: transparent; }
+  #starlight__search { --pagefind-ui-primary: var(--accent); --pagefind-ui-text: var(--fg1); --pagefind-ui-background: var(--surface); --pagefind-ui-border: var(--border); --pagefind-ui-font: var(--font-ui); --pagefind-ui-border-radius: var(--radius-md); }
+
+  /* ─────────── social + theme select ─────────── */
+  .social-icons a { color: var(--fg3); transition: color var(--dur) var(--ease); }
+  .social-icons a:hover { color: var(--accent); }
+  /* Light-only product: the toggle is removed, not just hidden. */
+  starlight-theme-select, .header starlight-theme-select { display: none; }
+
+  /* ─────────── sidebar ───────────
+     Same paper as the content, one hairline edge — exactly the app's
+     sidebar. Rows are 2px-radius, quiet until hovered. */
+  .sidebar-pane { background: var(--bg); border-inline-end: 1px solid var(--border); padding: 0; }
+  .sidebar-content { padding: 0 12px 32px; gap: 2px; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+  /* Full-height rail: the sidebar runs from the top of the viewport and the
+     header starts after it, so the wordmark sits IN the sidebar (the app's
+     arrangement) instead of floating above an empty header slot. */
+  @media (min-width: 50rem) {
+    .sidebar-pane { top: 0; height: 100vh; z-index: 20; }
+    [data-has-sidebar] .header { padding-inline-start: calc(var(--sl-sidebar-width) + 24px); }
+  }
+  /* Splash pages have no sidebar, so there the header carries the lockup. */
+  body:not([data-has-sidebar]) .site-title { display: flex; }
+  .cm-sidebar-lockup { display: none; align-items: center; gap: 9px; text-decoration: none; padding: 26px 4px 20px; }
+  @media (min-width: 50rem) { .cm-sidebar-lockup { display: flex; } }
+  .sidebar-content ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
+  .sidebar-content ul ul { padding-inline-start: 10px; border-inline-start: 1px solid var(--border); margin-inline-start: 6px; }
+  .sidebar-content a { font-family: var(--font-ui); font-size: 14px; font-weight: 400; color: var(--fg2); border-radius: var(--radius-xs); padding: 6px 10px; border-inline-start: 3px solid transparent; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+  .sidebar-content a:hover { background: var(--surface-sunken); color: var(--fg1); }
+  .sidebar-content a[aria-current='page'] { background: var(--accent-tint); border-inline-start-color: var(--accent); color: var(--accent); font-weight: 500; }
+  .sidebar-content a[aria-current='page']:hover { background: var(--accent-tint); }
+  /* Group labels — Lora 500, the design system's "section header" register. */
+  .sidebar-content .large, .sidebar-content summary > .group-label > .large { font-family: var(--font-display); font-size: 15px; font-weight: 500; letter-spacing: var(--tracking-tight); color: var(--fg1); padding: 20px 10px 6px; }
+  .sidebar-content details > summary { cursor: pointer; }
+  .sidebar-content details > summary::marker, .sidebar-content details > summary::-webkit-details-marker { color: var(--fg3); }
+  .sidebar-content .sl-badge { background: var(--accent-light); color: var(--accent); border: 0; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: 10.5px; font-weight: 500; padding: 1px 5px; }
+
+  /* Sidebar footer — accent switch + one quiet trust line. */
+  .cm-sidebar-foot { margin-top: auto; padding: 16px 14px 4px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+  .cm-accent-switch { display: flex; align-items: center; gap: 8px; }
+  .cm-accent-switch .label { font-family: var(--font-ui); font-size: 11px; color: var(--fg3); margin-inline-end: auto; }
+  .cm-accent-dot { width: 14px; height: 14px; border-radius: var(--radius-full); border: 1px solid transparent; padding: 0; cursor: pointer; background: var(--steel); transition: box-shadow var(--dur) var(--ease); }
+  .cm-accent-dot[data-accent-value='forest'] { background: var(--forest); }
+  .cm-accent-dot[aria-pressed='true'] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px currentColor; color: var(--fg3); }
+  .cm-trust { font-family: var(--font-ui); font-size: 11.5px; line-height: var(--leading-snug); color: var(--fg-muted); margin: 0; }
+
+  /* ─────────── main frame + content column ─────────── */
+  .main-pane { padding-block: 0; }
+  .content-panel { padding: 32px 24px; border-top: 0; }
+  .content-panel + .content-panel { border-top: 1px solid var(--border); }
+  @media (min-width: 50rem) { .content-panel { padding: 40px 40px 48px; } }
+  .sl-container { --sl-content-margin-inline: 0; }
+
+  /* ─────────── page title (Lora, the only serif in the body) ─────────── */
+  .cm-page-header { display: flex; flex-direction: column; gap: 10px; }
+  .cm-page-title { font-family: var(--font-display); font-size: 32px; font-weight: 700; letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); color: var(--fg1); margin: 0; }
+  .cm-page-description { font-family: var(--font-ui); font-size: 16px; line-height: var(--leading-body); color: var(--fg3); margin: 0; max-width: 60ch; }
+
+  /* ─────────── prose ───────────
+     Body 15px/1.6 in warm secondary ink; headings in DM Sans 500 so a
+     long page stays scannable (Lora is reserved for the title). */
+  .sl-markdown-content { font-family: var(--font-ui); font-size: 15px; line-height: var(--leading-body); color: var(--fg2); }
+  .sl-markdown-content :is(h2, h3, h4, h5, h6) { font-family: var(--font-ui); font-weight: 500; letter-spacing: 0; color: var(--fg1); }
+  .sl-markdown-content h2 { font-size: 20px; line-height: 1.35; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sl-markdown-content h3 { font-size: 17px; margin-top: 32px; }
+  .sl-markdown-content h4 { font-size: 15px; font-weight: 600; margin-top: 24px; }
+  .sl-markdown-content :is(h5, h6) { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+  .sl-markdown-content p { text-wrap: pretty; }
+  .sl-markdown-content strong { font-weight: 600; color: var(--fg1); }
+  .sl-markdown-content a:not([class]) { color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent-mid); text-underline-offset: 3px; font-weight: 400; transition: text-decoration-color var(--dur) var(--ease); }
+  .sl-markdown-content a:not([class]):hover { text-decoration-color: var(--accent); }
+  .sl-markdown-content :is(ul, ol) { padding-inline-start: 22px; }
+  .sl-markdown-content li::marker { color: var(--fg3); }
+  .sl-markdown-content li + li { margin-top: 6px; }
+  .sl-markdown-content blockquote { border-inline-start: 2px solid var(--border-strong); padding-inline-start: 16px; color: var(--fg3); font-style: normal; }
+  .sl-markdown-content hr { border: 0; border-top: 1px solid var(--border); }
+  .sl-markdown-content .sl-anchor-link { color: var(--fg-muted); }
+  .sl-markdown-content .sl-anchor-link:hover { color: var(--accent); }
+  .sl-markdown-content img, .sl-markdown-content video { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+
+  /* tables — hairline rows, uppercase meta header */
+  .sl-markdown-content table { border-collapse: collapse; font-size: 14px; }
+  .sl-markdown-content :is(th, td) { border: 0; border-bottom: 1px solid var(--border); padding: 10px 14px 10px 0; text-align: start; }
+  .sl-markdown-content th { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+  .sl-markdown-content td { color: var(--fg2); }
+  .sl-markdown-content tbody tr:last-child td { border-bottom: 0; }
+
+  /* ─────────── code ───────────
+     Warm paper block: a cream fill derived from the alt section colour,
+     one hairline, ink text. Nothing dark, nothing glowing. */
+  .sl-markdown-content :not(pre) > code { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--fg1); font-family: var(--font-mono); font-size: 0.875em; padding: 1px 5px; }
+  .expressive-code .frame pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .expressive-code .frame:not(.is-terminal) .header { background: var(--code-bg); border-bottom: 1px solid var(--border); }
+  .expressive-code .frame .header::before, .expressive-code .frame .header::after { border: 0; }
+  .expressive-code .frame.is-terminal .header { background: var(--surface-sunken); color: var(--fg3); font-family: var(--font-ui); font-size: 12px; }
+  .expressive-code .copy button { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .sl-markdown-content kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; padding: 2px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: var(--radius-sm); background: var(--surface); color: var(--fg1); font-family: var(--font-mono); font-size: 11.5px; line-height: 1.4; }
+
+  /* ─────────── asides ───────────
+     White surface, hairline, 12px radius — the app's card, tinted by the
+     semantic hue only in its icon, title and border. */
+  .sl-markdown-content .starlight-aside { --aside-bg: var(--surface); --aside-line: var(--border); --aside-title: var(--fg1); border: 1px solid var(--aside-line); border-inline-start: 1px solid var(--aside-line); border-radius: var(--radius-lg); background: var(--aside-bg); padding: 14px 16px; color: var(--fg2); }
+  .sl-markdown-content .starlight-aside--note { --aside-bg: var(--accent-light); --aside-line: color-mix(in oklab, var(--accent-mid) 60%, var(--accent-light)); --aside-title: var(--accent-hover); }
+  .sl-markdown-content .starlight-aside--tip { --aside-bg: var(--forest-tint); --aside-line: color-mix(in oklab, var(--forest) 35%, var(--forest-tint)); --aside-title: var(--forest); }
+  .sl-markdown-content .starlight-aside--caution { --aside-bg: var(--warn-bg); --aside-line: color-mix(in oklab, var(--warn-border) 55%, var(--warn-bg)); --aside-title: var(--warn-fg); }
+  .sl-markdown-content .starlight-aside--danger { --aside-bg: var(--error-bg); --aside-line: var(--error-border); --aside-title: var(--error-fg); }
+  .sl-markdown-content .starlight-aside__title { font-family: var(--font-ui); font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--aside-title); gap: 8px; align-items: center; }
+  .sl-markdown-content .starlight-aside__icon { width: 15px; height: 15px; color: var(--aside-title); }
+  .sl-markdown-content .starlight-aside__content { font-size: 14px; line-height: var(--leading-body); color: var(--fg2); }
+  .sl-markdown-content .starlight-aside__content a { color: var(--aside-title); }
+
+  /* ─────────── cards, link cards, link buttons ─────────── */
+  .sl-markdown-content .card-grid { gap: 12px; }
+  .sl-markdown-content :is(.card, .sl-link-card) { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: none; padding: 18px 20px; transition: border-color var(--dur) var(--ease); }
+  .sl-markdown-content :is(.card, .sl-link-card):hover { border-color: var(--accent-mid); }
+  .sl-markdown-content .card { gap: 8px; }
+  .sl-markdown-content .card .title { font-family: var(--font-ui); font-size: 15px; font-weight: 600; color: var(--fg1); gap: 10px; align-items: center; }
+  .sl-markdown-content .card .icon { width: 16px; height: 16px; padding: 7px; box-sizing: content-box; border: 0; border-radius: var(--radius-md); color: var(--accent); background: var(--accent-light); }
+  .sl-markdown-content :is(.card .body, .sl-link-card .description) { font-size: 14px; line-height: var(--leading-body); color: var(--fg3); }
+  .sl-markdown-content .sl-link-card .title { font-family: var(--font-ui); font-size: 15px; font-weight: 600; color: var(--fg1); }
+  .sl-markdown-content .sl-link-card .icon { color: var(--fg3); }
+  .sl-markdown-content .sl-link-card:hover .icon { color: var(--accent); }
+  .sl-link-button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 20px; border: 1px solid transparent; border-radius: var(--radius-md); font-family: var(--font-ui); font-size: 15px; font-weight: 600; text-decoration: none; transition: opacity var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+  .sl-link-button.primary { background: var(--accent); color: var(--on-accent); }
+  .sl-link-button.primary:hover { opacity: 0.9; }
+  .sl-link-button.secondary { background: var(--surface); border-color: var(--border); color: var(--fg1); }
+  .sl-link-button.secondary:hover { border-color: var(--accent-mid); color: var(--accent); }
+  .sl-link-button.minimal { color: var(--accent); padding-inline: 4px; }
+
+  /* ─────────── badges, steps, tabs, file tree ─────────── */
+  .sl-markdown-content .sl-badge { border: 0; border-radius: var(--radius-sm); background: var(--accent-light); color: var(--accent); font-family: var(--font-ui); font-size: 11px; font-weight: 500; padding: 2px 7px; }
+  .sl-markdown-content .sl-badge.success { background: var(--forest-tint); color: var(--forest); }
+  .sl-markdown-content .sl-badge.caution { background: var(--warn-bg); color: var(--warn-fg); }
+  .sl-markdown-content .sl-badge.danger { background: var(--error-bg); color: var(--error-fg); }
+  .sl-markdown-content .sl-badge.default { background: var(--surface-sunken); color: var(--fg2); }
+  .sl-markdown-content .sl-steps { --bullet-size: 26px; }
+  .sl-markdown-content .sl-steps > li::before { background: var(--accent-light); color: var(--accent); font-family: var(--font-ui); font-size: 13px; font-weight: 500; box-shadow: none; }
+  .sl-markdown-content .sl-steps > li::after { background: var(--border); }
+  .sl-markdown-content starlight-tabs [role='tablist'] { border-bottom: 1px solid var(--border); gap: 4px; }
+  .sl-markdown-content starlight-tabs [role='tab'] { font-family: var(--font-ui); font-size: 14px; font-weight: 500; color: var(--fg3); --sl-tab-color-border: transparent; }
+  .sl-markdown-content starlight-tabs [role='tab'][aria-selected='true'] { color: var(--accent); --sl-tab-color-border: var(--accent); }
+  .sl-markdown-content starlight-file-tree { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--code-bg); font-family: var(--font-mono); font-size: 13px; }
+  .sl-markdown-content starlight-file-tree ul { border-inline-start-color: var(--border); }
+  .sl-markdown-content starlight-file-tree :is(.directory > details > summary, .file) { color: var(--fg1); }
+  .sl-markdown-content starlight-file-tree svg { fill: var(--fg3); }
+
+  /* ─────────── right sidebar / on this page ─────────── */
+  .right-sidebar { border-inline-start: 0; }
+  .right-sidebar-panel { padding: 40px 20px; }
+  .right-sidebar-panel h2 { font-family: var(--font-ui); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+  starlight-toc nav ul { border-inline-start: 1px solid var(--border); }
+  starlight-toc a { font-family: var(--font-ui); font-size: 13px; line-height: var(--leading-snug); color: var(--fg3); border: 0; border-inline-start: 1px solid transparent; margin-inline-start: -1px; padding-block: 5px; transition: color var(--dur) var(--ease); }
+  starlight-toc a:hover { color: var(--fg1); }
+  starlight-toc a[aria-current='true'] { color: var(--accent); border-inline-start-color: var(--accent); font-weight: 500; }
+  mobile-starlight-toc nav { background: var(--bg); border-bottom: 1px solid var(--border); }
+  mobile-starlight-toc summary { border-bottom: 0; }
+
+  /* ─────────── pagination + page footer meta ─────────── */
+  .pagination-links { gap: 12px; }
+  .pagination-links a { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: none; padding: 14px 18px; gap: 4px; transition: border-color var(--dur) var(--ease); }
+  .pagination-links a:hover { border-color: var(--accent-mid); }
+  .pagination-links svg { color: var(--fg3); }
+  .pagination-links a span:first-child { font-family: var(--font-ui); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+  .pagination-links .link-title { font-family: var(--font-ui); font-size: 15px; font-weight: 500; color: var(--fg1); }
+  .pagination-links a:hover .link-title { color: var(--accent); }
+  footer .meta { font-family: var(--font-ui); font-size: 12px; color: var(--fg3); gap: 12px; }
+  footer .meta a { color: var(--fg3); text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 3px; }
+  footer .meta a:hover { color: var(--accent); }
+
+  /* ─────────── site footer (the landing page's, verbatim) ─────────── */
+  .cm-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 40px; padding: 24px 0 8px; border-top: 0.5px solid var(--border); }
+  .cm-footer .lockup { display: flex; align-items: center; gap: 9px; }
+  .cm-footer .name { font-family: var(--font-display); font-size: 15px; color: var(--fg2); }
+  .cm-footer .name .tld { color: var(--accent); }
+  .cm-footer .note { font-family: var(--font-ui); font-size: 12px; color: var(--fg3); }
+  .cm-footer .note a { color: var(--fg3); text-decoration: none; }
+  .cm-footer .note a:hover { color: var(--accent); }
+
+  /* ─────────── splash home (hero) ───────────
+     Marketing register: Lora 400 + italic, -1.2px tracking. */
+  .hero { padding-block: 24px 8px; gap: 40px; }
+  .hero h1 { font-family: var(--font-display); font-size: clamp(32px, 5vw, 44px); font-weight: 400; letter-spacing: var(--tracking-hero); line-height: var(--leading-tight); color: var(--fg1); }
+  .hero h1 em, .hero h1 .accent { font-style: italic; color: var(--accent); }
+  .hero .tagline { font-family: var(--font-ui); font-size: 16px; line-height: var(--leading-body); color: var(--fg3); margin-top: 14px; }
+  .hero .actions { gap: 10px; margin-top: 26px; }
+  .cm-hero-anthem { font-family: var(--font-ui); font-size: 13px; color: var(--fg-muted); margin: 18px 0 0; }
+  /* App mockup — macOS-style window chrome, the only "imagery" the brand has. */
+  .cm-mockup { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); overflow: hidden; box-shadow: var(--shadow-md); }
+  .cm-mockup .chrome { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--bg); }
+  .cm-mockup .chrome i { width: 9px; height: 9px; border-radius: var(--radius-full); background: var(--border-strong); }
+
+  /* A trust line used as a quiet band between sections. */
+  .cm-band { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 22px 0; margin-block: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .cm-band p { font-family: var(--font-display); font-size: 17px; font-weight: 400; letter-spacing: var(--tracking-tight); color: var(--fg2); margin: 0; }
+  .cm-band a { font-family: var(--font-ui); font-size: 13px; color: var(--accent); text-decoration: none; margin-inline-start: auto; }
+
+  /* ─────────── motion ─────────── */
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: 1ms !important; animation-duration: 1ms !important; } }
+}

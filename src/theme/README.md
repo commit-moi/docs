@@ -87,12 +87,18 @@ and paper). No new hex enters the system.
 Two width facts worth knowing:
 
 - **Article pages** use `--docs-content-w` (820px), flush beside the rail.
-- **Splash pages** (no sidebar) are centred and wider. Starlight sets their width
-  from an UNLAYERED rule in `Page.astro`, and unlayered declarations beat every
-  `@layer` regardless of specificity — so the theme's override sits at the very
-  bottom of `base.css`, **outside** `@layer commit-moi`. It is the only rule in
-  the theme that does. If you move it into the layer it silently stops working
-  and the home page snaps back to Starlight's 67.5rem.
+- **Splash pages** (no sidebar) are centred, with a **1390px box · 20px padding ·
+  1350px content column**. Starlight sets their width from an UNLAYERED rule in
+  `Page.astro`, so the theme's override sits at the very bottom of `base.css`,
+  **outside** `@layer commit-moi` — the only rule in the theme that does. Two
+  things about it are load-bearing:
+  - The selector is `html:root:not([data-has-sidebar])`, not `html:not(...)`.
+    Starlight's rule is unlayered too, with the same selector and property, so
+    source order decides — and the bundle puts theirs last, where a minifier
+    drops ours as a duplicate. The `:root` buys one class of specificity.
+  - `--sl-content-width` sizes the INNER container, so the value you set **is**
+    the text column. The 20px padding is a separate declaration on
+    `.sl-container`; without it the column would be the full 1390px.
 
 ### Keeping tokens.css in sync
 
@@ -271,7 +277,20 @@ new one — `square-check-big` tasks, `layout-grid` spaces, `goal` projects,
   not the nav ("Email capture", not "Email capture (assistant@commit.moi)").
 - **Style the OUTER header only** (`header.header`). Starlight nests two
   `class="header"` elements; a bare `.header` selector hits both and breaks the
-  inner bar's 3-column grid.
+  inner bar's 3-column grid. That inner bar IS a grid — to move something inside
+  it, set `justify-content` on the cell; a margin on a sibling cannot shift a
+  grid column.
+- **The rail inset is 14px** on `.sidebar-content`, and it governs the nav. The
+  **lockup deliberately steps out of it** — `width: var(--docs-sidebar-w)` with
+  `margin-inline-start: -14px` — so it repeats the header's 248px box exactly and
+  both wordmarks land on the same x. Centring it inside the rail cannot reach
+  that x: the rail's content box is 16px narrower than the pane.
+- **Anything you style inside the sidebar must out-specify `.sidebar-content a`
+  (0,1,1).** The lockup is an `<a>` in that container, so it inherits the nav
+  row's padding and 3px indicator edge; a bare `.cm-sidebar-lockup` (0,1,0)
+  silently loses. Qualify with the ancestor. The structurally clean fix — moving
+  the lockup into `.sidebar-pane` — is not reachable from the Sidebar override,
+  which renders inside `.sidebar-content`.
 - **Icons are Lucide**, 2px stroke, 16–20px, inheriting text colour. Reuse the
   app's glyph for a concept (`square-check-big` tasks · `layout-grid` spaces ·
   `goal` projects · `git-commit-horizontal` GitHub) instead of picking a new one.

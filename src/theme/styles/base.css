@@ -30,13 +30,33 @@
   /* Header.astro's inner bar takes the free space, so the app link appended
      after it lands at the far edge instead of mid-bar. */
   header.header > .header { flex: 1; min-width: 0; }
-  .header .header > .sl-flex { gap: 16px; align-items: center; }
+  /* Starlight's inner .header is a GRID, not a flex row: the search sits in a
+     wide middle column and aligns to its start, ~1190px left of the rest of the
+     bar. Right-align the cell contents — a margin on the title cannot move a
+     grid column. */
+  .header .header > .sl-flex { gap: 16px; align-items: center; justify-content: flex-end; }
+  /* Splash pages show the wordmark IN the header (no sidebar to hold it), and
+     Starlight's bar then places search in the column straight after it — reading
+     as one lockup+field cluster on the left. Push everything after the title to
+     the right edge, and inset the lockup to 16px — the same x as the sidebar's
+     lockup on an article page, so the whole bar stays put when the visitor moves
+     between home and docs. Article pages keep Starlight's own distribution: their
+     title is hidden above 50rem. */
+  html:not([data-has-sidebar]) .header .header > :is(.title-wrapper, .site-title) { margin-inline-end: auto; }
+  @media (min-width: 50rem) {
+    html:not([data-has-sidebar]) header.header { padding-inline-start: 0; }
+    /* The lockup occupies a rail-width box centred like the sidebar's, so the
+       wordmark lands on the same x and y on both page kinds. */
+    html:not([data-has-sidebar]) .site-title { width: var(--docs-sidebar-w); flex: none; box-sizing: border-box; padding-inline: 12px; justify-content: center; gap: 10px; }
+    html:not([data-has-sidebar]) .site-title :is(.cm-mark, .ds-logo) { --mark-size: 34px; --logo-size: 34px; }
+    html:not([data-has-sidebar]) .site-title .cm-wordmark { font-size: 24px; }
+  }
   /* The way back to the app — see components/Header.astro. */
   .cm-header-rule { width: 1px; height: 16px; background: var(--border); flex: none; }
   .cm-app-link { font-family: var(--font-ui); font-size: var(--text-sm); color: var(--accent); text-decoration: none; white-space: nowrap; flex: none; }
   .cm-app-link:hover { text-decoration: underline; text-underline-offset: 3px; }
   @media (max-width: 49.99rem) { .cm-header-rule, .cm-app-link { display: none; } }
-  .site-title { display: flex; align-items: center; gap: 11px; font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); letter-spacing: var(--tracking-tight); color: var(--fg1); text-decoration: none; white-space: nowrap; overflow: hidden; }
+  .site-title { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-weight: 700; font-size: var(--text-xl); letter-spacing: var(--tracking-tight); color: var(--fg1); text-decoration: none; white-space: nowrap; overflow: hidden; }
   @media (min-width: 50rem) { .site-title { display: none; } }
 
   /* ─────────── the mark (pure-CSS app icon) ───────────
@@ -47,11 +67,9 @@
   .cm-mark .rule { position: absolute; right: calc(var(--mark-size) * 0.225); top: 0; bottom: 0; width: max(1.5px, calc(var(--mark-size) * 0.05)); background: rgba(255, 255, 255, 0.28); }
   .cm-mark .node { position: absolute; right: calc(var(--mark-size) * 0.125); top: 50%; transform: translateY(-50%); width: calc(var(--mark-size) * 0.2); height: calc(var(--mark-size) * 0.2); border-radius: var(--radius-full); background: #fff; border: 1.5px solid var(--accent); z-index: 3; }
   .cm-wordmark { font-family: var(--font-display); font-weight: 700; font-size: var(--text-xl); letter-spacing: var(--tracking-tight); color: var(--accent); }
-  /* Only the HEADER lockup is oversized. The default above is the app's own
-     sidebar size (28px mark / 20px wordmark) — the sidebar rail is 248px wide and
-     a 34px mark there reads as a logo competing with the nav. */
-  header.header :is(.cm-mark, .ds-logo) { --mark-size: 34px; --logo-size: 34px; }
-  header.header .cm-wordmark { font-size: var(--text-2xl); }
+  /* The header lockup matches the sidebar's — one mark size in the theme, so the
+     bar it sits in is never outweighed by it. */
+  header.header :is(.cm-mark, .ds-logo) { --mark-size: 28px; --logo-size: 28px; }
   .cm-wordmark .tld { color: var(--fg1); }
 
   /* ─────────── search ───────────
@@ -76,7 +94,10 @@
      Same paper as the content, one hairline edge — exactly the app's
      sidebar. Rows are 2px-radius, quiet until hovered. */
   .sidebar-pane { background: var(--bg); border-inline-end: 1px solid var(--border); padding: 0; }
-  .sidebar-content { padding: 0 12px 32px; gap: 2px; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+  /* 14px is THE rail inset — the number both design specs use. Earlier copies of
+     this file said 12px here and 16px in a comment; those were wrong and made the
+     sidebar wordmark sit 6.5px left of the header's. */
+  .sidebar-content { padding: 0 14px 32px; gap: 2px; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
   /* Full-height rail: the sidebar runs from the top of the viewport and the
      header starts after it, so the wordmark sits IN the sidebar (the app's
      arrangement) instead of floating above an empty header slot. */
@@ -87,7 +108,21 @@
   /* Splash pages have no sidebar, so there the header carries the lockup.
      Starlight puts `data-has-sidebar` on <html>, not <body>. */
   html:not([data-has-sidebar]) .site-title { display: flex; }
-  .cm-sidebar-lockup { display: none; align-items: center; gap: 9px; text-decoration: none; padding: 26px 4px 20px; }
+  /* Occupies the same 64px band as the header AND repeats its exact box: 248px
+     wide, centred. It has to step out of `.sidebar-content` to do that — the rail
+     insets 14px and its content box is 16px narrower than the pane, so a lockup
+     centred inside it can never reach the header's x.
+
+     Note the selector. This is an <a> inside .sidebar-content, so the nav-row
+     rule below (`.sidebar-content a`, specificity 0,1,1) beats a bare
+     `.cm-sidebar-lockup` (0,1,0) and re-applies its padding and 3px indicator
+     edge. Qualifying with the ancestor makes this 0,2,1 and settles it. The
+     lockup is not a nav row; the only clean structural fix would move it into
+     .sidebar-pane, which Starlight's slot does not allow from this override. */
+  .cm-sidebar-lockup { display: none; height: 64px; flex: none; align-items: center; justify-content: center; gap: 10px; text-decoration: none; margin-bottom: 16px; }
+  .sidebar-content a.cm-sidebar-lockup { box-sizing: border-box; width: var(--docs-sidebar-w); margin-inline-start: -14px; padding: 0 12px; border-inline-start: 0; border-radius: 0; background: none; }
+  .cm-sidebar-lockup :is(.cm-mark, .ds-logo) { --mark-size: 34px; --logo-size: 34px; }
+  .cm-sidebar-lockup .cm-wordmark { font-size: 24px; }
   @media (min-width: 50rem) { .cm-sidebar-lockup { display: flex; } }
   .sidebar-content ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
   .sidebar-content ul ul { padding-inline-start: 10px; border-inline-start: 1px solid var(--border); margin-inline-start: 6px; }
@@ -250,10 +285,10 @@
     [data-has-sidebar][data-has-toc] .main-pane { width: calc(100% - var(--docs-toc-w)); }
   }
   .right-sidebar { border-inline-start: 0; }
-  .right-sidebar-panel { padding: 44px 20px 44px 40px; }
+  .right-sidebar-panel { padding: 44px 12px 44px 32px; }
   .right-sidebar-panel h2 { font-family: var(--font-ui); font-size: var(--text-2xs); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
-  starlight-toc nav ul { border-inline-start: 1px solid var(--border); }
-  starlight-toc a { font-family: var(--font-ui); font-size: var(--text-sm); line-height: var(--leading-snug); color: var(--fg3); border: 0; border-inline-start: 1px solid transparent; margin-inline-start: -1px; padding-block: 5px; transition: color var(--dur) var(--ease); }
+  starlight-toc nav ul { border-inline-start: 3px solid var(--border); }
+  starlight-toc a { font-family: var(--font-ui); font-size: var(--text-sm); line-height: var(--leading-snug); color: var(--fg3); border: 0; border-inline-start: 3px solid transparent; margin-inline-start: -3px; padding-block: 5px; transition: color var(--dur) var(--ease); }
   starlight-toc a:hover { color: var(--fg1); }
   starlight-toc a[aria-current='true'] { color: var(--accent); border-inline-start-color: var(--accent); font-weight: 500; }
   mobile-starlight-toc nav { background: var(--bg); border-bottom: 1px solid var(--border); }
@@ -357,7 +392,7 @@
      free space and wraps only when it must. A 70ch cap measured in Lora 20px came
      out at 869px, which broke this sentence over two lines while the design spec
      showed it on one — the flex row is the honest answer to "how wide". */
-  .sl-markdown-content .cm-band-text { font-family: var(--font-display); font-size: var(--text-xl); flex: 1; min-width: 0; }
+  .sl-markdown-content .cm-band-text { font-family: var(--font-display); font-size: var(--text-lg); flex: 1; min-width: 0; }
   /* One step down on phones — 20px Lora over three lines reads as a headline the
      page didn't ask for. */
   @media (max-width: 40rem) { .sl-markdown-content .cm-band-text { font-size: var(--text-md); } }
@@ -432,7 +467,7 @@
   .sl-markdown-content .cm-latest:hover { border-color: var(--latest); }
   .sl-markdown-content .cm-latest:has(.cm-latest-title:focus-visible) { outline: 2px solid var(--latest); outline-offset: 2px; }
   .sl-markdown-content .cm-latest-tag { flex: none; white-space: nowrap; font-family: var(--font-ui); font-size: var(--text-2xs); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--latest); background: var(--surface); border: 1px solid color-mix(in oklab, var(--latest) 50%, transparent); border-radius: var(--radius-sm); padding: 2px 7px; }
-  .sl-markdown-content .cm-latest-title { flex: none; font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; letter-spacing: var(--tracking-tight); color: var(--fg1); text-decoration: none; }
+  .sl-markdown-content .cm-latest-title { flex: none; white-space: nowrap; font-family: var(--font-display); font-size: 22px; font-weight: 500; letter-spacing: var(--tracking-tight); color: var(--fg1); text-decoration: none; }
   .sl-markdown-content .cm-latest-title::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
   .sl-markdown-content .cm-latest-title:focus-visible { outline: none; }
   .sl-markdown-content .cm-latest-body { flex: 1; min-width: 0; font-size: var(--text-sm); color: var(--fg2); }
@@ -444,13 +479,26 @@
 }
 
 /* ── UNLAYERED, on purpose ───────────────────────────────────────────────
-   Splash pages (no sidebar) get their width from Starlight's own unlayered
-   rule in Page.astro — `html:not([data-has-sidebar]) { --sl-content-width:
-   67.5rem }`. Unlayered declarations win over every @layer, so this override
-   must sit outside `@layer commit-moi` to take effect. 90rem = 1440px: with the
-   64px content padding that puts the first text ~155px from the window edge on a
-   1622px viewport (a 14" MacBook), and centres on anything wider.
+   Splash pages (no sidebar) get their width from Starlight's own unlayered rule
+   in Page.astro — `html:not([data-has-sidebar]) { --sl-content-width: 67.5rem }`.
+
+   TWO traps here, both hit in v11:
+
+   1. Being unlayered is not enough. Starlight's rule is ALSO unlayered, with the
+      same selector and the same property, so the winner is decided by source
+      order — and the bundle puts Starlight's after ours, where a minifier drops
+      the earlier duplicate outright. `html:root` adds one class worth of
+      specificity, which settles it regardless of order. Do not simplify it back.
+
+   2. `--sl-content-width` sizes the INNER container, not an outer box: the value
+      you set IS the text column. So 1390px here would give a 1390px column, not
+      1350. The signed-off geometry is a 1390px box with 20px padding and a
+      1350px column, which takes both declarations below.
+
    Article pages are unaffected: they use --docs-content-w. */
-html:not([data-has-sidebar]) {
-  --sl-content-width: 90rem;
+html:root:not([data-has-sidebar]) {
+  --sl-content-width: 86.875rem; /* 1390px — the page box */
+}
+html:root:not([data-has-sidebar]) .sl-container {
+  padding-inline: 20px; /* leaves a 1350px content column */
 }

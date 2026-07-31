@@ -30,8 +30,8 @@
        fill is a mix of the alt section fill and paper, so no new hex
        enters the system. */
     --docs-sidebar-w: 248px;
-    --docs-content-w: 820px;
-    --docs-toc-w: 232px;
+    --docs-content-w: 1012px;
+    --docs-toc-w: 398px;
     --docs-nav-h: 64px;
     --code-bg: color-mix(in oklab, var(--surface-sunken) 45%, var(--bg));
   }
@@ -115,7 +115,7 @@
     --sl-sidebar-width: var(--docs-sidebar-w);
     --sl-sidebar-pad-x: 16px;
     --sl-content-width: var(--docs-content-w);
-    --sl-content-pad-x: 24px;
+    --sl-content-pad-x: 20px;
     --sl-mobile-toc-height: 48px;
 
     /* ---- Type scale ----

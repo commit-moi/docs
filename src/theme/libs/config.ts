@@ -31,10 +31,16 @@ export const StarlightThemeCommitMoiConfigSchema = z
     anthem: z
       .union([z.string(), z.literal(false)])
       .default('every task is an issue. every space is a repo. every byte is yours.'),
-    /** Footer credit, bottom-right of the bar. */
+    /**
+     * Footer credit, bottom-right of the bar. Rendered with `set:html`, so it may
+     * carry a link — the handle links to its GitHub profile and inherits the
+     * bar's type, with no underline (see `.cm-footer-bar .note a` in base.css).
+     */
     footerNote: z
       .string()
-      .default('Coded with ❤️ in Barcelona © 2026 cknyco'),
+      .default(
+        'Coded with ❤️ in Barcelona © 2026 <a href="https://github.com/cknyco">@cknyco</a>',
+      ),
     /**
      * The independence notice, bottom-left of the footer bar. Required by the
      * brand: commit.moi builds ON GitHub, so it must never look endorsed BY it.

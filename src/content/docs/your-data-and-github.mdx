@@ -1,0 +1,57 @@
+---
+title: Your data & GitHub
+description: What we store, what we never touch, and how to leave with everything. GitHub is the only database.
+---
+
+import { CardGrid, Aside } from '@astrojs/starlight/components';
+import { Card } from '@theme/components';
+
+commit.moi has no database. Your tasks are issues, your spaces are private
+repositories, and both live in your own GitHub account. We ship the frontend.
+You already own the backend.
+
+## What lives where
+
+| Thing | Where it lives |
+| --- | --- |
+| Tasks, notes, projects, areas | Your private repositories |
+| History of every change | Git history in those repositories |
+| Your identity | Your GitHub account |
+| Your access token | Your browser session |
+| Anything else | Nowhere. There is no anything else. |
+
+<Aside type="note" title="One tab is all it takes">
+Open the repository on github.com and compare it to the app. Trust isn't a
+promise here.
+</Aside>
+
+## What we ask GitHub for
+
+<CardGrid>
+  <Card title="Private repositories" icon="lock">
+    To create your spaces and read and write the issues inside them.
+  </Card>
+  <Card title="Your profile" icon="user">
+    Name, avatar and the email on your account — for the sidebar and email capture.
+  </Card>
+</CardGrid>
+
+Nothing else is requested, and nothing outside the spaces we created is
+touched. Repositories you already had are none of our business.
+
+## Leaving
+
+There is no export, because there is nothing of yours in here to export.
+
+1. Revoke the OAuth grant in your GitHub settings.
+2. That's it. Your repositories, issues and history stay exactly as they are.
+
+<Aside type="tip" title="Cancel commit.moi. Keep everything.">
+If commit.moi disappeared tomorrow, nothing happens to your tasks. They're
+issues in your repos.
+</Aside>
+
+## Fine print
+
+commit.moi is an independent product and is not affiliated with, endorsed by,
+or sponsored by GitHub, Inc.

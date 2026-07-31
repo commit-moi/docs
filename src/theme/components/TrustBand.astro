@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro'
+
+/* One proof line as a quiet rule between sections. AT MOST ONE PER PAGE —
+   trust lines are seasoning, not filler. Take the wording from the design
+   system's "Voice — Trust Lines" card rather than writing a new one.
+
+   The slot is wrapped in a <div>, never a <p>: MDX hands block markup to a
+   component's children, so a <p> wrapper produces <p><p>…</p></p> and the
+   parser unnests it into empty siblings. Same reason cm-card-body is a <div>.
+   Paragraph typography lives on `.cm-band-text p` — MDX supplies the <p>. */
+interface Props {
+  href?: string
+  cta?: string
+}
+
+const { href, cta = 'Read more' } = Astro.props
+---
+
+<aside class="cm-band">
+  <div class="cm-band-text"><slot /></div>
+  {
+    href && (
+      <a href={href}>
+        {cta}
+        <Icon name="arrow-right" size={14} />
+      </a>
+    )
+  }
+</aside>

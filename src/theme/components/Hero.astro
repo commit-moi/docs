@@ -11,13 +11,13 @@ const { title = data.title, tagline, image, actions = [] } = data.hero ?? {}
 ---
 
 <div class="hero">
-  <div class="sl-flex copy">
+  <div class="copy">
     <h1 id="_top" set:html={title} />
     {tagline && <div class="tagline" set:html={tagline} />}
     {config.anthem && <p class="cm-hero-anthem">{config.anthem}</p>}
     {
       actions.length > 0 && (
-        <div class="sl-flex actions">
+        <div class="actions">
           {actions.map(({ attrs, link: href, text, variant }) => (
             <a class:list={['sl-link-button', variant ?? 'primary']} {href} {...attrs}>
               <span set:html={text} />
@@ -28,7 +28,7 @@ const { title = data.title, tagline, image, actions = [] } = data.hero ?? {}
     }
   </div>
 
-  <div class="sl-flex hero-html">
+  <div class="hero-html">
     {
       image?.file ? (
         <Image src={image.file} alt={image.alt || ''} width={640} densities={[1.5, 2]} />
@@ -59,7 +59,9 @@ const { title = data.title, tagline, image, actions = [] } = data.hero ?? {}
 </div>
 
 <style>
-  /* Mockup internals only — every colour is a design-system token. */
+  /* Mockup internals only. The hero's LAYOUT lives in styles/base.css: Astro
+     scopes component CSS, so a replaced override inherits nothing from
+     Starlight's original — and docs-chrome layout belongs in one file. */
   .cm-mockup-body { display: grid; grid-template-columns: 92px 1fr; min-height: 208px; }
   .cm-mockup-rail { display: flex; flex-direction: column; gap: 6px; padding: 14px 10px; background: var(--bg); border-inline-end: 1px solid var(--border); }
   .cm-mockup-word { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--accent); margin-bottom: 8px; }

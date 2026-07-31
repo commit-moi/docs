@@ -22,6 +22,11 @@ commit.moi's own design system in place of its palette and type.
 cp -R starlight-theme-commit-moi <docs-repo>/src/theme
 ```
 
+Needs **Astro ≥ 7.0.2** and **Starlight ≥ 0.41.5** (the range Starlight itself
+declares). Verified on Astro 7.1.6 / Starlight 0.41.5: Vite 8 loads the virtual
+config module fine, and `:::` directives render unchanged under the new
+Markdown processor.
+
 ```js
 // astro.config.mjs
 import starlight from '@astrojs/starlight'
@@ -46,7 +51,7 @@ Add the virtual-module types to the project's `src/env.d.ts`:
 /// <reference types="./theme/virtual.d.ts" />
 ```
 
-`astro.config.example.ts` is the full reference config, including the sidebar IA.
+`../repo-starter/astro.config.ts` is the full config, including the sidebar IA.
 If you put the folder somewhere else, pass `themeBase: './your/path'`.
 
 ## Options
@@ -116,15 +121,63 @@ src/theme/
 │  ├── starlight-bridge.css      every --sl-* → a commit.moi token
 │  └── base.css                  header, sidebar, prose, code, asides, cards…
 └── components/
-   ├── Banner.astro              body-start accent application (+ Starlight's banner)
-   ├── Head.astro                color-scheme: light
-   ├── SiteTitle.astro           mobile lockup (desktop wordmark is in the sidebar)
-   ├── Sidebar.astro             wordmark + nav + accent switch + trust line
-   ├── ThemeSelect.astro         empty — light only
-   ├── PageTitle.astro           Lora 700 title + description as a deck line
-   ├── Footer.astro              Starlight footer + the landing page's footer
-   └── Hero.astro                splash hero + app mockup in window chrome
+   ├── index.ts                  barrel for the content-facing components
+   │
+   │  ── Starlight overrides ──
+   ├── Banner.astro          W   body-start accent application
+   ├── Head.astro            W   color-scheme: light
+   ├── Header.astro          W   + "Open app →"
+   ├── Footer.astro          W   + the landing page's footer
+   ├── Sidebar.astro         W   wordmark + accent switch + trust line
+   ├── SiteTitle.astro       R   mobile lockup (desktop wordmark is in the sidebar)
+   ├── PageTitle.astro       R   Lora 700 title + description as a deck line
+   ├── Hero.astro            R   splash hero + app mockup in window chrome
+   ├── ThemeSelect.astro     R   empty — light only
+   │
+   │  ── for use in content ──
+   ├── Card.astro                icon card, with or without a link
+   ├── TrustBand.astro           one proof line as a rule between sections
+   └── Icon.astro                the Lucide glyphs the docs use, vendored
 ```
+
+**W** wraps Starlight's component (`<Default>` + our additions) · **R** replaces it.
+
+### The rule for overrides: replaced means restyled
+
+Astro **scopes** component CSS. A component that *wraps* `<Default>` keeps
+Starlight's styles; a component that *replaces* it inherits **none** of them —
+including layout. That is why every **R** component's CSS lives in
+`styles/base.css` rather than in a `<style>` block: one file for docs chrome,
+and no rule can go missing because a component was swapped.
+
+If you replace one more, port its layout to `base.css` in the same commit.
+
+### Content-facing components
+
+```mdx
+import { CardGrid } from '@astrojs/starlight/components';
+import { Card, TrustBand } from '@theme/components';
+
+<CardGrid>
+  <Card title="Spaces" icon="layout-grid" href="/spaces/">
+    One private repo per part of your life.
+  </Card>
+</CardGrid>
+
+<TrustBand href="/your-data-and-github/" cta="Your data & GitHub">
+  If commit.moi disappeared tomorrow, nothing happens to your tasks.
+</TrustBand>
+```
+
+`@theme/*` is the tsconfig path alias to `src/theme/*`. Everything else —
+`<Aside>`, `<Steps>`, `<Tabs>`, `<CardGrid>`, `<FileTree>` — is Starlight's own
+and needs no replacement.
+
+**Why a card of our own:** Starlight's `<Card>` only takes a glyph from its
+built-in set, which has none of the app's, and its `<LinkCard>` takes no icon at
+all. `Icon.astro` vendors the Lucide paths the docs use — no dependency, no
+network. To add a glyph, paste its `<svg>` innards from lucide.dev into the map,
+and **reuse the app's glyph for a concept** instead of picking a new one.
 
 ## Rules for anyone editing this theme
 
@@ -144,10 +197,16 @@ src/theme/
 - **Icons are Lucide**, 2px stroke, 16–20px, inheriting text colour. Reuse the
   app's glyph for a concept (`square-check-big` tasks · `layout-grid` spaces ·
   `goal` projects · `git-commit-horizontal` GitHub) instead of picking a new one.
+- **A replaced override carries its own layout to `base.css`.** See above.
+- **One trust line per page**, at most, and never invent the wording.
+- **Never wrap a slot in `<p>`, `<span>` or `<a>`.** MDX hands a component
+  *block* markup, so those wrappers get unnested by the parser — empty
+  paragraphs at best, a torn-apart layout at worst. Wrap in a `<div>` and set
+  the type one level down (`.cm-band-text p`, `.cm-card-body`). The same rule
+  is why the card links its title instead of wrapping itself in an anchor.
 
 ## Design reference
 
-The intended rendering lives in the design system's Templates group:
-`templates/docs/Docs.dc.html` (article page) and
-`templates/docs-home/DocsHome.dc.html` (splash home). When CSS and template
-disagree, the template is the spec.
+The intended rendering lives one level up, in `../DocsTemplate.dc.html` (article
+page) and `../DocsHome.dc.html` (splash home) — open them in the design system.
+When the CSS and the template disagree, the template is the spec.

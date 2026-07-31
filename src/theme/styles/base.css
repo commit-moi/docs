@@ -19,9 +19,14 @@
      Paper, one hairline, no shadow. On desktop the wordmark lives at the
      top of the sidebar (Sidebar override), so the header's title slot is
      hidden and the bar carries only search + links. */
-  .header { border-bottom: 1px solid var(--border); background: var(--bg); box-shadow: none; padding-inline: 20px; }
-  .header > .sl-flex { gap: 16px; align-items: center; }
-  .site-title { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: var(--tracking-tight); color: var(--fg1); gap: 9px; }
+  .header { display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); background: var(--bg); box-shadow: none; padding-inline: 20px; }
+  .header > .sl-flex { flex: 1; min-width: 0; gap: 16px; align-items: center; }
+  /* The way back to the app — see components/Header.astro. */
+  .cm-header-rule { width: 1px; height: 16px; background: var(--border); flex: none; }
+  .cm-app-link { font-family: var(--font-ui); font-size: 13px; color: var(--accent); text-decoration: none; white-space: nowrap; flex: none; }
+  .cm-app-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 50rem) { .cm-header-rule, .cm-app-link { display: none; } }
+  .site-title { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: var(--tracking-tight); color: var(--fg1); text-decoration: none; white-space: nowrap; overflow: hidden; }
   @media (min-width: 50rem) { .site-title { display: none; } }
 
   /* ─────────── the mark (pure-CSS app icon) ───────────
@@ -64,8 +69,9 @@
     .sidebar-pane { top: 0; height: 100vh; z-index: 20; }
     [data-has-sidebar] .header { padding-inline-start: calc(var(--sl-sidebar-width) + 24px); }
   }
-  /* Splash pages have no sidebar, so there the header carries the lockup. */
-  body:not([data-has-sidebar]) .site-title { display: flex; }
+  /* Splash pages have no sidebar, so there the header carries the lockup.
+     Starlight puts `data-has-sidebar` on <html>, not <body>. */
+  html:not([data-has-sidebar]) .site-title { display: flex; }
   .cm-sidebar-lockup { display: none; align-items: center; gap: 9px; text-decoration: none; padding: 26px 4px 20px; }
   @media (min-width: 50rem) { .cm-sidebar-lockup { display: flex; } }
   .sidebar-content ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
@@ -223,21 +229,65 @@
 
   /* ─────────── splash home (hero) ───────────
      Marketing register: Lora 400 + italic, -1.2px tracking. */
-  .hero { padding-block: 24px 8px; gap: 40px; }
-  .hero h1 { font-family: var(--font-display); font-size: clamp(32px, 5vw, 44px); font-weight: 400; letter-spacing: var(--tracking-hero); line-height: var(--leading-tight); color: var(--fg1); }
+  /* Starlight's Hero is REPLACED, and Astro scopes component CSS — an override
+     inherits none of the original's styles, so the hero's layout lives here
+     with the rest of the docs chrome. Same rule for every replaced component. */
+  .hero { display: grid; grid-template-columns: 100%; align-items: center; gap: 32px; padding-block: 24px 8px; }
+  .hero .copy { text-align: center; }
+  .hero h1 { font-family: var(--font-display); font-size: clamp(32px, 5vw, 44px); font-weight: 400; letter-spacing: var(--tracking-hero); line-height: var(--leading-tight); color: var(--fg1); margin: 0; }
   .hero h1 em, .hero h1 .accent { font-style: italic; color: var(--accent); }
   .hero .tagline { font-family: var(--font-ui); font-size: 16px; line-height: var(--leading-body); color: var(--fg3); margin-top: 14px; }
-  .hero .actions { gap: 10px; margin-top: 26px; }
+  .hero .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
+  .hero .hero-html { display: flex; justify-content: center; }
+  .hero .hero-html > * { width: min(100%, 26rem); }
+  @media (min-width: 50rem) {
+    .hero { grid-template-columns: 7fr 5fr; gap: 40px; padding-block: 40px 24px; }
+    .hero .copy { text-align: start; }
+    .hero .actions { justify-content: flex-start; }
+    .hero .hero-html { order: 2; }
+    .hero .hero-html > * { width: 100%; }
+  }
   .cm-hero-anthem { font-family: var(--font-ui); font-size: 13px; color: var(--fg-muted); margin: 18px 0 0; }
   /* App mockup — macOS-style window chrome, the only "imagery" the brand has. */
   .cm-mockup { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); overflow: hidden; box-shadow: var(--shadow-md); }
   .cm-mockup .chrome { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--bg); }
   .cm-mockup .chrome i { width: 9px; height: 9px; border-radius: var(--radius-full); background: var(--border-strong); }
 
-  /* A trust line used as a quiet band between sections. */
+  /* ─────────── trust band (<TrustBand>) ───────────
+     A proof line as a quiet rule between sections. One per page, at most.
+     The text is a <div> holding MDX's own <p>, so the type is set one level
+     down — wrapping a slot in <p> nests paragraphs. The CTA is matched as a
+     DIRECT child so a link inside the line keeps prose styling. */
   .cm-band { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 22px 0; margin-block: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
-  .cm-band p { font-family: var(--font-display); font-size: 17px; font-weight: 400; letter-spacing: var(--tracking-tight); color: var(--fg2); margin: 0; }
-  .cm-band a { font-family: var(--font-ui); font-size: 13px; color: var(--accent); text-decoration: none; margin-inline-start: auto; }
+  .sl-markdown-content .cm-band-text { max-width: 70ch; }
+  .sl-markdown-content .cm-band-text p { font-family: var(--font-display); font-size: 17px; font-weight: 400; letter-spacing: var(--tracking-tight); line-height: var(--leading-snug); color: var(--fg2); margin: 0; }
+  .sl-markdown-content .cm-band-text p + p { margin-top: 10px; }
+  .sl-markdown-content .cm-band > a { font-family: var(--font-ui); font-size: 13px; color: var(--accent); text-decoration: none; margin-inline-start: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+  .sl-markdown-content .cm-band > a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ─────────── themed card (<Card> / <Card href>) ───────────
+     Starlight's own <Card> can't take a Lucide glyph and its <LinkCard> has no
+     icon at all, so the theme ships one card that does both.
+
+     The link is on the TITLE, stretched over the card by an ::after overlay —
+     an <a> wrapping the whole card would break as soon as the body contained a
+     link (nested anchors are invalid, and the parser tears the card apart).
+     Body links are lifted above the overlay so they still work. */
+  .sl-markdown-content .cm-card { position: relative; display: block; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: 18px 20px; box-shadow: none; }
+  .sl-markdown-content .cm-card:has(.cm-card-link) { transition: border-color var(--dur) var(--ease); }
+  .sl-markdown-content .cm-card:has(.cm-card-link):hover { border-color: var(--accent-mid); }
+  .sl-markdown-content .cm-card:has(.cm-card-link:focus-visible) { outline: 2px solid var(--accent-mid); outline-offset: 2px; }
+  .sl-markdown-content .cm-card-head { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-size: 15px; font-weight: 600; color: var(--fg1); margin: 0; }
+  .sl-markdown-content .cm-card-link { color: inherit; text-decoration: none; font-weight: inherit; }
+  .sl-markdown-content .cm-card-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  .sl-markdown-content .cm-card-link:focus-visible { outline: none; }
+  .sl-markdown-content .cm-card-icon { width: 30px; height: 30px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--accent-light); color: var(--accent); }
+  .sl-markdown-content .cm-card-go { margin-inline-start: auto; color: var(--fg3); flex: none; }
+  .sl-markdown-content .cm-card:hover .cm-card-go { color: var(--accent); }
+  .sl-markdown-content .cm-card-body { font-size: 14px; line-height: var(--leading-body); color: var(--fg3); margin: 8px 0 0; }
+  .sl-markdown-content .cm-card-body > :last-child { margin-bottom: 0; }
+  /* Above the stretched overlay, so a link in the body stays clickable. */
+  .sl-markdown-content .cm-card-body a { position: relative; z-index: 1; }
 
   /* ─────────── motion ─────────── */
   @media (prefers-reduced-motion: reduce) { * { transition-duration: 1ms !important; animation-duration: 1ms !important; } }

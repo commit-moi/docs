@@ -14,24 +14,50 @@ hero:
       variant: secondary
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { CardGrid } from '@astrojs/starlight/components';
+import { Card, TrustBand } from '@theme/components';
 
 ## Start here
 
 <CardGrid>
-  <LinkCard title="Getting started" href="/getting-started/" description="Sign in with GitHub, get your first space, capture your first task. Four minutes." />
-  <LinkCard title="Tasks & areas" href="/tasks-and-areas/" description="Inbox, Today, Upcoming, Anytime, Someday, Logbook — and the labels that cut across them." />
-  <LinkCard title="Spaces" href="/spaces/" description="One private repo per part of your life. Tasks, cookbook, journal, notes." />
-  <LinkCard title="Projects" href="/projects/" description="Milestones with a progress ring — a place for tasks that belong together." />
+  <Card title="Getting started" icon="rocket" href="/getting-started/">
+    Sign in with GitHub, get your first space, capture your first task. Four minutes.
+  </Card>
+  <Card title="Tasks & areas" icon="square-check-big" href="/tasks-and-areas/">
+    Inbox, Today, Upcoming, Anytime, Someday, Logbook — and the labels that cut across them.
+  </Card>
+  <Card title="Spaces" icon="layout-grid" href="/spaces/">
+    One private repo per part of your life. Tasks, cookbook, journal, notes.
+  </Card>
+  <Card title="Projects" icon="goal" href="/projects/">
+    Milestones with a progress ring — a place for tasks that belong together.
+  </Card>
 </CardGrid>
+
+<TrustBand href="/your-data-and-github/" cta="Your data & GitHub">
+  If commit.moi disappeared tomorrow, nothing happens to your tasks. They're
+  issues in your repos.
+</TrustBand>
 
 ## Everything else
 
 <CardGrid>
-  <LinkCard title="Email capture" href="/email-capture/" description="Forward anything to assistant@commit.moi." />
-  <LinkCard title="Keyboard shortcuts" href="/keyboard-shortcuts/" description="⌘K, and the ten keys that matter." />
-  <LinkCard title="Your data & GitHub" href="/your-data-and-github/" description="What we store. What we never touch." />
-  <LinkCard title="Account & settings" href="/account-and-settings/" description="Theme, dates, timezone, signing out." />
-  <LinkCard title="Troubleshooting" href="/troubleshooting/" description="When GitHub is unreachable or a write fails." />
-  <LinkCard title="Changelog" href="/changelog/" description="What shipped, newest first." />
+  <Card title="Email capture" icon="mail" href="/email-capture/">
+    Forward anything to assistant@commit.moi.
+  </Card>
+  <Card title="Keyboard shortcuts" icon="keyboard" href="/keyboard-shortcuts/">
+    ⌘K, and the ten keys that matter.
+  </Card>
+  <Card title="Your data & GitHub" icon="shield-check" href="/your-data-and-github/">
+    What we store. What we never touch.
+  </Card>
+  <Card title="Account & settings" icon="settings" href="/account-and-settings/">
+    Theme, dates, timezone, signing out.
+  </Card>
+  <Card title="Troubleshooting" icon="life-buoy" href="/troubleshooting/">
+    When GitHub is unreachable or a write fails.
+  </Card>
+  <Card title="Changelog" icon="scroll-text" href="/changelog/">
+    What shipped, newest first.
+  </Card>
 </CardGrid>

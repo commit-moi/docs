@@ -1,0 +1,31 @@
+---
+import Icon from './Icon.astro'
+
+/* The theme's card. Starlight's own <Card> can only take a glyph from its
+   built-in set (which has none of the app's), and its <LinkCard> takes no icon
+   at all — so this one does both, with a Lucide glyph from Icon.astro.
+
+   The card is a <div>, never an <a>: the link is on the TITLE and stretched
+   over the card with an ::after overlay. Wrapping the whole card in an anchor
+   breaks the moment the body contains a link — including one Markdown creates
+   on its own, like a bare email address. Links in the body sit above the
+   overlay and keep working. Screen readers get the title as the link text.
+
+   Use inside Starlight's <CardGrid>. Styles live in styles/base.css. */
+interface Props {
+  title: string
+  icon?: string
+  href?: string
+}
+
+const { title, icon, href } = Astro.props
+---
+
+<div class="cm-card">
+  <p class="cm-card-head">
+    {icon && <span class="cm-card-icon"><Icon name={icon} size={16} /></span>}
+    {href ? <a class="cm-card-link" href={href}>{title}</a> : <span>{title}</span>}
+    {href && <Icon name="arrow-right" size={16} class="cm-card-go" />}
+  </p>
+  <div class="cm-card-body"><slot /></div>
+</div>

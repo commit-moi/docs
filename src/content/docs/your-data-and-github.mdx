@@ -3,7 +3,8 @@ title: Your data & GitHub
 description: What we store, what we never touch, and how to leave with everything. GitHub is the only database.
 ---
 
-import { CardGrid, Card, Aside } from '@astrojs/starlight/components';
+import { CardGrid, Aside } from '@astrojs/starlight/components';
+import { Card } from '@theme/components';
 
 commit.moi has no database. Your tasks are issues, your spaces are private
 repositories, and both live in your own GitHub account. We ship the frontend.
@@ -27,10 +28,10 @@ promise here.
 ## What we ask GitHub for
 
 <CardGrid>
-  <Card title="Private repositories" icon="seti:github">
+  <Card title="Private repositories" icon="lock">
     To create your spaces and read and write the issues inside them.
   </Card>
-  <Card title="Your profile" icon="seti:default">
+  <Card title="Your profile" icon="user">
     Name, avatar and the email on your account — for the sidebar and email capture.
   </Card>
 </CardGrid>

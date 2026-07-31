@@ -3,7 +3,8 @@ title: Getting started
 description: Sign in with GitHub, get your first space, and capture your first task. Four minutes, and nothing to configure.
 ---
 
-import { Steps, CardGrid, LinkCard, Aside } from '@astrojs/starlight/components';
+import { Steps, CardGrid, Aside } from '@astrojs/starlight/components';
+import { Card } from '@theme/components';
 
 commit.moi is a task manager with no database of its own. You sign in with
 GitHub, and everything you write is stored in a private repository you own.
@@ -53,8 +54,16 @@ there.
 ## Where to go next
 
 <CardGrid>
-  <LinkCard title="Tasks & areas" href="/tasks-and-areas/" description="The six status views, due dates, and the labels that cut across them." />
-  <LinkCard title="Spaces" href="/spaces/" description="Give a part of your life its own private repository." />
-  <LinkCard title="Email capture" href="/email-capture/" description="Forward anything to assistant@commit.moi and let it land in the right place." />
-  <LinkCard title="Keyboard shortcuts" href="/keyboard-shortcuts/" description="⌘K, and the ten keys that matter." />
+  <Card title="Tasks & areas" icon="square-check-big" href="/tasks-and-areas/">
+    The six status views, due dates, and the labels that cut across them.
+  </Card>
+  <Card title="Spaces" icon="layout-grid" href="/spaces/">
+    Give a part of your life its own private repository.
+  </Card>
+  <Card title="Email capture" icon="mail" href="/email-capture/">
+    Forward anything to assistant@commit.moi and let it land in the right place.
+  </Card>
+  <Card title="Keyboard shortcuts" icon="keyboard" href="/keyboard-shortcuts/">
+    ⌘K, and the ten keys that matter.
+  </Card>
 </CardGrid>

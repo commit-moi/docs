@@ -42,7 +42,7 @@ export default function starlightThemeCommitMoi(
         updateConfig({
           components: overrideComponents(
             starlightConfig,
-            ['Banner', 'Head', 'Hero', 'PageTitle', 'Sidebar', 'SiteTitle', 'ThemeSelect', 'Footer'],
+            ['Banner', 'Head', 'Header', 'Hero', 'PageTitle', 'Sidebar', 'SiteTitle', 'ThemeSelect', 'Footer'],
             base,
             logger,
           ),

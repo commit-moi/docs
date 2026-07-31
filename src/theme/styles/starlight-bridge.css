@@ -29,9 +29,9 @@
        All derived: the rail is the app's sidebar width, and the code
        fill is a mix of the alt section fill and paper, so no new hex
        enters the system. */
-    --docs-sidebar-w: 220px;
-    --docs-content-w: 720px;
-    --docs-toc-w: 208px;
+    --docs-sidebar-w: 248px;
+    --docs-content-w: 820px;
+    --docs-toc-w: 232px;
     --docs-nav-h: 64px;
     --code-bg: color-mix(in oklab, var(--surface-sunken) 45%, var(--bg));
   }
@@ -118,25 +118,31 @@
     --sl-content-pad-x: 24px;
     --sl-mobile-toc-height: 48px;
 
-    /* ---- Type scale — the design system's compact scale, not Starlight's ---- */
-    --sl-text-2xs: 11px;
-    --sl-text-xs: 12px;
-    --sl-text-sm: 13px;
-    --sl-text-base: 15px;
-    --sl-text-lg: 16px;
-    --sl-text-xl: 18px;
-    --sl-text-2xl: 20px;
-    --sl-text-3xl: 24px;
-    --sl-text-4xl: 28px;
-    --sl-text-5xl: 32px;
-    --sl-text-6xl: 44px;
-    --sl-text-code: 13.5px;
-    --sl-text-code-sm: 12.5px;
-    --sl-text-h1: 32px;
-    --sl-text-h2: 20px;
-    --sl-text-h3: 17px;
-    --sl-text-h4: 15px;
-    --sl-text-h5: 13px;
+    /* ---- Type scale ----
+       Every step is a --text-* token from colors_and_type.css, so the docs and
+       the app share ONE scale: 11 · 12 · 13 · 15 · 16 · 18 · 20 · 28 · 32 · 44.
+       Starlight has more steps than the scale does, so some collapse onto the
+       same token — that is correct. Never introduce an in-between value
+       (14, 17, 13.5): if a step is missing it is missing from the design
+       system, and that is a design-request, not a local fix. */
+    --sl-text-2xs: var(--text-2xs);
+    --sl-text-xs: var(--text-xs);
+    --sl-text-sm: var(--text-sm);
+    --sl-text-base: var(--text-base);
+    --sl-text-lg: var(--text-md);
+    --sl-text-xl: var(--text-lg);
+    --sl-text-2xl: var(--text-xl);
+    --sl-text-3xl: var(--text-2xl);
+    --sl-text-4xl: var(--text-2xl);
+    --sl-text-5xl: var(--text-3xl);
+    --sl-text-6xl: var(--text-4xl);
+    --sl-text-code: var(--text-sm);
+    --sl-text-code-sm: var(--text-xs);
+    --sl-text-h1: var(--text-3xl);
+    --sl-text-h2: var(--text-xl);
+    --sl-text-h3: var(--text-lg);
+    --sl-text-h4: var(--text-base);
+    --sl-text-h5: var(--text-sm);
   }
 
   ::selection {

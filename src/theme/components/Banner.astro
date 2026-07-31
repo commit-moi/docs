@@ -3,12 +3,16 @@ import Default from '@astrojs/starlight/components/Banner.astro'
 import config from 'virtual:starlight-theme-commit-moi/config'
 ---
 
-<Default><slot /></Default>
+{/* Starlight renders <Banner> as the first thing inside <main>, which is the
+    earliest override that can touch <body> — so the accent is applied here,
+    ahead of Starlight's own banner markup. The swap itself is the design
+    system's own `[data-theme="forest"]` block, applied to <body> because
+    Starlight owns <html data-theme> for light/dark. No accent value is
+    re-declared anywhere in this theme.
 
-{/* First element inside <body>, so the accent is set before anything paints.
-    The swap itself is the design system's own `[data-theme="forest"]` block —
-    applied to <body> because Starlight owns <html data-theme> for light/dark.
-    No accent value is re-declared anywhere in this theme. */}
+    Forest users may see one frame of steel on a cold load; the alternative
+    (re-declaring the ramp against <html>) would put a second copy of the accent
+    in the system, which is the worse trade. */}
 <script is:inline data-cm-accent={config.accent}>
   (() => {
     let accent = document.currentScript?.dataset.cmAccent || 'steel'
@@ -20,3 +24,5 @@ import config from 'virtual:starlight-theme-commit-moi/config'
     else delete document.body.dataset.theme
   })()
 </script>
+
+<Default><slot /></Default>

@@ -15,7 +15,11 @@ hero:
 ---
 
 import { CardGrid } from '@astrojs/starlight/components';
-import { Card, IndexList, IndexRow, TrustBand } from '@theme/components';
+import { Card, IndexList, IndexRow, Latest, TrustBand } from '@theme/components';
+
+<Latest title="Spaces everywhere">
+  Ten space types, sharing one space at a time, and this manual.
+</Latest>
 
 ## Start here
 
@@ -42,10 +46,9 @@ import { Card, IndexList, IndexRow, TrustBand } from '@theme/components';
 ## Everything else
 
 <IndexList>
-  <IndexRow title="Email capture" href="/email-capture/">Forward anything to assistant@commit.moi.</IndexRow>
+  <IndexRow title="Email capture" href="/email-capture/">Forward anything to {'assistant@commit.moi'}.</IndexRow>
   <IndexRow title="Keyboard shortcuts" href="/keyboard-shortcuts/">⌘K, and the ten keys that matter.</IndexRow>
   <IndexRow title="Your data & GitHub" href="/your-data-and-github/">What we store. What we never touch.</IndexRow>
   <IndexRow title="Account & settings" href="/account-and-settings/">Theme, dates, timezone, signing out.</IndexRow>
   <IndexRow title="Troubleshooting" href="/troubleshooting/">When GitHub is unreachable or a write fails.</IndexRow>
-  <IndexRow title="Changelog" href="/changelog/">What shipped, newest first.</IndexRow>
 </IndexList>

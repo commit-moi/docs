@@ -31,12 +31,23 @@ export const StarlightThemeCommitMoiConfigSchema = z
     anthem: z
       .union([z.string(), z.literal(false)])
       .default('every task is an issue. every space is a repo. every byte is yours.'),
-    /** Footer note — the landing page's signature, reused verbatim. */
+    /** Footer credit, bottom-right of the bar. */
     footerNote: z
       .string()
-      .default('Open source · GitHub-backed · Coded with ❤️ in Barcelona © 2026 cknyco'),
+      .default('Coded with ❤️ in Barcelona © 2026 cknyco'),
+    /**
+     * The independence notice, bottom-left of the footer bar. Required by the
+     * brand: commit.moi builds ON GitHub, so it must never look endorsed BY it.
+     */
+    disclaimer: z
+      .string()
+      .default(
+        'commit.moi is an independent project, not affiliated with or endorsed by GitHub.',
+      ),
     /** Where the wordmark points. */
     appUrl: z.string().default('https://commit.moi'),
+    /** The GitHub org or repo the footer links to. */
+    repoUrl: z.string().default('https://github.com/commit-moi'),
   })
   .default({})
 

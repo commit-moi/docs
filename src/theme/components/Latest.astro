@@ -1,0 +1,25 @@
+---
+import Icon from './Icon.astro'
+
+/* The latest release, given a prominent slot above the section grids — what
+   shipped is what a returning reader came for. Keep it to ONE release and one
+   line; the changelog page carries the history.
+
+   Same stretched-link mechanism as <Card>: the anchor is on the title and
+   covers the band, so a link in the body still works. */
+interface Props {
+  title: string
+  href?: string
+  tag?: string
+  cta?: string
+}
+
+const { title, href = '/changelog/', tag = "What's new", cta = 'Changelog' } = Astro.props
+---
+
+<aside class="cm-latest">
+  <span class="cm-latest-tag">{tag}</span>
+  <a class="cm-latest-title" href={href}>{title}</a>
+  <div class="cm-latest-body"><slot /></div>
+  <span class="cm-latest-go">{cta}<Icon name="arrow-right" size={16} /></span>
+</aside>

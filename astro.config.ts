@@ -27,8 +27,7 @@ export default defineConfig({
           trustLine: 'Nothing lives behind our UI that you can’t see on github.com.',
         }),
       ],
-      // Sidebar labels are kept short on purpose — the rail is 220px, the
-      // app's own sidebar width.
+      // Sidebar labels are kept short on purpose — the rail is 248px.
       sidebar: [
         {
           label: 'Start here',

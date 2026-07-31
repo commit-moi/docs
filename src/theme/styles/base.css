@@ -18,15 +18,25 @@
   /* ─────────── header ───────────
      Paper, one hairline, no shadow. On desktop the wordmark lives at the
      top of the sidebar (Sidebar override), so the header's title slot is
-     hidden and the bar carries only search + links. */
-  .header { display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); background: var(--bg); box-shadow: none; padding-inline: 20px; }
-  .header > .sl-flex { flex: 1; min-width: 0; gap: 16px; align-items: center; }
+     hidden and the bar carries only search + links.
+
+     CAREFUL: Starlight nests TWO elements with class="header" — PageFrame's
+     fixed <header class="header"> and, inside it, Header.astro's own
+     <div class="header"> which owns the title/search/right-group layout (a
+     3-column grid above 50rem). Chrome styling therefore targets `header.header`
+     ONLY: a bare `.header` doubles the hairline and padding, and replaces that
+     grid with flex — which is what collapsed the bar's distribution before. */
+  header.header { display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); background: var(--bg); box-shadow: none; }
+  /* Header.astro's inner bar takes the free space, so the app link appended
+     after it lands at the far edge instead of mid-bar. */
+  header.header > .header { flex: 1; min-width: 0; }
+  .header .header > .sl-flex { gap: 16px; align-items: center; }
   /* The way back to the app — see components/Header.astro. */
   .cm-header-rule { width: 1px; height: 16px; background: var(--border); flex: none; }
-  .cm-app-link { font-family: var(--font-ui); font-size: 13px; color: var(--accent); text-decoration: none; white-space: nowrap; flex: none; }
+  .cm-app-link { font-family: var(--font-ui); font-size: var(--text-sm); color: var(--accent); text-decoration: none; white-space: nowrap; flex: none; }
   .cm-app-link:hover { text-decoration: underline; text-underline-offset: 3px; }
-  @media (max-width: 50rem) { .cm-header-rule, .cm-app-link { display: none; } }
-  .site-title { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: var(--tracking-tight); color: var(--fg1); text-decoration: none; white-space: nowrap; overflow: hidden; }
+  @media (max-width: 49.99rem) { .cm-header-rule, .cm-app-link { display: none; } }
+  .site-title { display: flex; align-items: center; gap: 11px; font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); letter-spacing: var(--tracking-tight); color: var(--fg1); text-decoration: none; white-space: nowrap; overflow: hidden; }
   @media (min-width: 50rem) { .site-title { display: none; } }
 
   /* ─────────── the mark (pure-CSS app icon) ───────────
@@ -36,15 +46,20 @@
   .cm-mark .c { position: absolute; left: calc(var(--mark-size) * 0.09); top: 45%; transform: translateY(-55%); font-family: var(--font-display); font-weight: 400; font-size: calc(var(--mark-size) * 0.95); line-height: 1; color: #fff; z-index: 2; }
   .cm-mark .rule { position: absolute; right: calc(var(--mark-size) * 0.225); top: 0; bottom: 0; width: max(1.5px, calc(var(--mark-size) * 0.05)); background: rgba(255, 255, 255, 0.28); }
   .cm-mark .node { position: absolute; right: calc(var(--mark-size) * 0.125); top: 50%; transform: translateY(-50%); width: calc(var(--mark-size) * 0.2); height: calc(var(--mark-size) * 0.2); border-radius: var(--radius-full); background: #fff; border: 1.5px solid var(--accent); z-index: 3; }
-  .cm-wordmark { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: var(--tracking-tight); color: var(--accent); }
+  .cm-wordmark { font-family: var(--font-display); font-weight: 700; font-size: var(--text-xl); letter-spacing: var(--tracking-tight); color: var(--accent); }
+  /* Only the HEADER lockup is oversized. The default above is the app's own
+     sidebar size (28px mark / 20px wordmark) — the sidebar rail is 248px wide and
+     a 34px mark there reads as a logo competing with the nav. */
+  header.header :is(.cm-mark, .ds-logo) { --mark-size: 34px; --logo-size: 34px; }
+  header.header .cm-wordmark { font-size: var(--text-2xl); }
   .cm-wordmark .tld { color: var(--fg1); }
 
   /* ─────────── search ───────────
      A white input-shaped affordance, not a button. Same 8px radius and
      hairline as the app's composer. */
-  site-search > button[data-open-modal] { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--fg3); font-family: var(--font-ui); font-size: 13px; font-weight: 400; height: 34px; padding-inline: 12px; gap: 8px; transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+  site-search > button[data-open-modal] { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--fg3); font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 400; height: 34px; padding-inline: 12px; gap: 8px; transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease); }
   site-search > button[data-open-modal]:hover { border-color: var(--border-strong); color: var(--fg2); }
-  site-search > button[data-open-modal] > kbd { background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--fg3); font-family: var(--font-mono); font-size: 11px; padding: 1px 5px; }
+  site-search > button[data-open-modal] > kbd { background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--fg3); font-family: var(--font-mono); font-size: var(--text-2xs); padding: 1px 5px; }
   site-search > button[data-open-modal] > kbd kbd { border: 0; padding: 0; }
   @media (min-width: 50rem) { site-search > button[data-open-modal] { width: 240px; justify-content: flex-start; } }
   site-search .dialog-frame { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-modal); padding: 16px; }
@@ -67,7 +82,7 @@
      arrangement) instead of floating above an empty header slot. */
   @media (min-width: 50rem) {
     .sidebar-pane { top: 0; height: 100vh; z-index: 20; }
-    [data-has-sidebar] .header { padding-inline-start: calc(var(--sl-sidebar-width) + 24px); }
+    [data-has-sidebar] header.header { padding-inline-start: calc(var(--sl-sidebar-width) + 24px); }
   }
   /* Splash pages have no sidebar, so there the header carries the lockup.
      Starlight puts `data-has-sidebar` on <html>, not <body>. */
@@ -76,30 +91,30 @@
   @media (min-width: 50rem) { .cm-sidebar-lockup { display: flex; } }
   .sidebar-content ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
   .sidebar-content ul ul { padding-inline-start: 10px; border-inline-start: 1px solid var(--border); margin-inline-start: 6px; }
-  .sidebar-content a { font-family: var(--font-ui); font-size: 14px; font-weight: 400; color: var(--fg2); border-radius: var(--radius-xs); padding: 6px 10px; border-inline-start: 3px solid transparent; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+  .sidebar-content a { font-family: var(--font-ui); font-size: var(--text-base); font-weight: 400; color: var(--fg2); border-radius: var(--radius-xs); padding: 6px 10px; border-inline-start: 3px solid transparent; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
   .sidebar-content a:hover { background: var(--surface-sunken); color: var(--fg1); }
   .sidebar-content a[aria-current='page'] { background: var(--accent-tint); border-inline-start-color: var(--accent); color: var(--accent); font-weight: 500; }
   .sidebar-content a[aria-current='page']:hover { background: var(--accent-tint); }
   /* Group labels — Lora 500, the design system's "section header" register. */
-  .sidebar-content .large, .sidebar-content summary > .group-label > .large { font-family: var(--font-display); font-size: 15px; font-weight: 500; letter-spacing: var(--tracking-tight); color: var(--fg1); padding: 20px 10px 6px; }
+  .sidebar-content .large, .sidebar-content summary > .group-label > .large { font-family: var(--font-display); font-size: var(--text-base); font-weight: 500; letter-spacing: var(--tracking-tight); color: var(--fg1); padding: 20px 10px 6px; }
   .sidebar-content details > summary { cursor: pointer; }
   .sidebar-content details > summary::marker, .sidebar-content details > summary::-webkit-details-marker { color: var(--fg3); }
-  .sidebar-content .sl-badge { background: var(--accent-light); color: var(--accent); border: 0; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: 10.5px; font-weight: 500; padding: 1px 5px; }
+  .sidebar-content .sl-badge { background: var(--accent-light); color: var(--accent); border: 0; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: var(--text-2xs); font-weight: 500; padding: 1px 5px; }
 
   /* Sidebar footer — accent switch + one quiet trust line. */
   .cm-sidebar-foot { margin-top: auto; padding: 16px 14px 4px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
   .cm-accent-switch { display: flex; align-items: center; gap: 8px; }
-  .cm-accent-switch .label { font-family: var(--font-ui); font-size: 11px; color: var(--fg3); margin-inline-end: auto; }
+  .cm-accent-switch .label { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--fg3); margin-inline-end: auto; }
   .cm-accent-dot { width: 14px; height: 14px; border-radius: var(--radius-full); border: 1px solid transparent; padding: 0; cursor: pointer; background: var(--steel); transition: box-shadow var(--dur) var(--ease); }
   .cm-accent-dot[data-accent-value='forest'] { background: var(--forest); }
   .cm-accent-dot[aria-pressed='true'] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px currentColor; color: var(--fg3); }
-  .cm-trust { font-family: var(--font-ui); font-size: 11.5px; line-height: var(--leading-snug); color: var(--fg-muted); margin: 0; }
+  .cm-trust { font-family: var(--font-ui); font-size: var(--text-2xs); line-height: var(--leading-snug); color: var(--fg-muted); margin: 0; }
 
   /* ─────────── main frame + content column ─────────── */
   .main-pane { padding-block: 0; }
   .content-panel { padding: 32px 24px; border-top: 0; }
   .content-panel + .content-panel { border-top: 1px solid var(--border); }
-  @media (min-width: 50rem) { .content-panel { padding: 40px 40px 48px; } }
+  @media (min-width: 50rem) { .content-panel { padding: 44px 64px 52px; } }
   /* Flush beside the sidebar on article pages — but the splash home has no
      sidebar, and there Starlight's centring is what we want. Same condition as
      .site-title above. */
@@ -107,18 +122,32 @@
 
   /* ─────────── page title (Lora, the only serif in the body) ─────────── */
   .cm-page-header { display: flex; flex-direction: column; gap: 10px; }
-  .cm-page-title { font-family: var(--font-display); font-size: 32px; font-weight: 700; letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); color: var(--fg1); margin: 0; }
-  .cm-page-description { font-family: var(--font-ui); font-size: 16px; line-height: var(--leading-body); color: var(--fg3); margin: 0; max-width: 60ch; }
+  .cm-page-title { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 700; letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); color: var(--fg1); margin: 0; }
+  .cm-page-description { font-family: var(--font-ui); font-size: var(--text-md); line-height: var(--leading-body); color: var(--fg3); margin: 0; max-width: 60ch; }
 
   /* ─────────── prose ───────────
      Body 15px/1.6 in warm secondary ink; headings in DM Sans 500 so a
      long page stays scannable (Lora is reserved for the title). */
-  .sl-markdown-content { font-family: var(--font-ui); font-size: 15px; line-height: var(--leading-body); color: var(--fg2); }
+  .sl-markdown-content { font-family: var(--font-ui); font-size: var(--text-base); line-height: var(--leading-body); color: var(--fg2); }
   .sl-markdown-content :is(h2, h3, h4, h5, h6) { font-family: var(--font-ui); font-weight: 500; letter-spacing: 0; color: var(--fg1); }
-  .sl-markdown-content h2 { font-size: 20px; line-height: 1.35; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
-  .sl-markdown-content h3 { font-size: 17px; margin-top: 32px; }
-  .sl-markdown-content h4 { font-size: 15px; font-weight: 600; margin-top: 24px; }
-  .sl-markdown-content :is(h5, h6) { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+  /* The section rule belongs on Starlight's heading WRAPPER: it renders headings
+     as display:inline so the anchor link shares their line, and a border-top on
+     an inline box is only as wide as its text. */
+  .sl-markdown-content :is(.sl-heading-wrapper.level-h2, h2:not(.sl-heading-wrapper > *)) { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sl-markdown-content .sl-heading-wrapper.level-h2 > h2 { margin: 0; padding: 0; border-top: 0; }
+  .sl-markdown-content h2 { font-size: var(--text-xl); line-height: 1.35; }
+  /* A section header straight after a trust band takes no rule of its own — the
+     band's bottom hairline already divides them (see DocsHome.dc.html). */
+  .sl-markdown-content .cm-band + :is(.sl-heading-wrapper.level-h2, h2) { margin-top: 0; padding-top: 0; border-top: 0; }
+  /* Splash pages set section headers in Lora, one step larger — a marketing
+     surface, read in one pass. Article pages keep DM Sans at --text-xl so a long
+     page stays scannable. The section rule takes the same accent hairline as the
+     boxes beneath it. */
+  html:not([data-has-sidebar]) .sl-markdown-content h2 { font-family: var(--font-display); font-size: var(--text-2xl); letter-spacing: var(--tracking-tight); }
+  html:not([data-has-sidebar]) .sl-markdown-content :is(.sl-heading-wrapper.level-h2, h2:not(.sl-heading-wrapper > *)) { border-top-color: color-mix(in oklab, var(--accent) 70%, transparent); }
+  .sl-markdown-content h3 { font-size: var(--text-lg); margin-top: 32px; }
+  .sl-markdown-content h4 { font-size: var(--text-base); font-weight: 600; margin-top: 24px; }
+  .sl-markdown-content :is(h5, h6) { font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
   .sl-markdown-content p { text-wrap: pretty; }
   .sl-markdown-content strong { font-weight: 600; color: var(--fg1); }
   .sl-markdown-content a:not([class]) { color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent-mid); text-underline-offset: 3px; font-weight: 400; transition: text-decoration-color var(--dur) var(--ease); }
@@ -133,9 +162,9 @@
   .sl-markdown-content img, .sl-markdown-content video { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
 
   /* tables — hairline rows, uppercase meta header */
-  .sl-markdown-content table { border-collapse: collapse; font-size: 14px; }
+  .sl-markdown-content table { border-collapse: collapse; font-size: var(--text-sm); }
   .sl-markdown-content :is(th, td) { border: 0; border-bottom: 1px solid var(--border); padding: 10px 14px 10px 0; text-align: start; }
-  .sl-markdown-content th { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+  .sl-markdown-content th { font-size: var(--text-2xs); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
   .sl-markdown-content td { color: var(--fg2); }
   .sl-markdown-content tbody tr:last-child td { border-bottom: 0; }
 
@@ -146,35 +175,48 @@
   .expressive-code .frame pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-md); }
   .expressive-code .frame:not(.is-terminal) .header { background: var(--code-bg); border-bottom: 1px solid var(--border); }
   .expressive-code .frame .header::before, .expressive-code .frame .header::after { border: 0; }
-  .expressive-code .frame.is-terminal .header { background: var(--surface-sunken); color: var(--fg3); font-family: var(--font-ui); font-size: 12px; }
+  .expressive-code .frame.is-terminal .header { background: var(--surface-sunken); color: var(--fg3); font-family: var(--font-ui); font-size: var(--text-xs); }
   .expressive-code .copy button { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
-  .sl-markdown-content kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; padding: 2px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: var(--radius-sm); background: var(--surface); color: var(--fg1); font-family: var(--font-mono); font-size: 11.5px; line-height: 1.4; }
+  .sl-markdown-content kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; padding: 2px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: var(--radius-sm); background: var(--surface); color: var(--fg1); font-family: var(--font-mono); font-size: var(--text-2xs); line-height: 1.4; }
 
   /* ─────────── asides ───────────
      White surface, hairline, 12px radius — the app's card, tinted by the
      semantic hue only in its icon, title and border. */
   .sl-markdown-content .starlight-aside { --aside-bg: var(--surface); --aside-line: var(--border); --aside-title: var(--fg1); border: 1px solid var(--aside-line); border-inline-start: 1px solid var(--aside-line); border-radius: var(--radius-lg); background: var(--aside-bg); padding: 14px 16px; color: var(--fg2); }
-  .sl-markdown-content .starlight-aside--note { --aside-bg: var(--accent-light); --aside-line: color-mix(in oklab, var(--accent-mid) 60%, var(--accent-light)); --aside-title: var(--accent-hover); }
-  .sl-markdown-content .starlight-aside--tip { --aside-bg: var(--forest-tint); --aside-line: color-mix(in oklab, var(--forest) 35%, var(--forest-tint)); --aside-title: var(--forest); }
+  /* Note and Tip must never both be the accent: with Forest selected an
+     accent-tinted note would sit next to a forest tip and read as the same box.
+     Both therefore use the STABLE identity ramps (--steel-*, --forest-*), which
+     do not move with the theme — so a note is always steel and a tip always
+     forest, in either accent. */
+  .sl-markdown-content .starlight-aside--note { --aside-bg: var(--steel-tint); --aside-line: color-mix(in oklab, var(--steel) 45%, var(--steel-tint)); --aside-title: var(--steel); }
+  .sl-markdown-content .starlight-aside--tip { --aside-bg: var(--forest-tint); --aside-line: color-mix(in oklab, var(--forest) 45%, var(--forest-tint)); --aside-title: var(--forest); }
+  /* All four ride SEMANTIC tokens, none of which move with the accent — so
+     Note/Tip/Caution/Danger stay four distinguishable boxes in either theme.
+     Same 45% line formula across the family. */
   .sl-markdown-content .starlight-aside--caution { --aside-bg: var(--warn-bg); --aside-line: color-mix(in oklab, var(--warn-border) 55%, var(--warn-bg)); --aside-title: var(--warn-fg); }
-  .sl-markdown-content .starlight-aside--danger { --aside-bg: var(--error-bg); --aside-line: var(--error-border); --aside-title: var(--error-fg); }
-  .sl-markdown-content .starlight-aside__title { font-family: var(--font-ui); font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--aside-title); gap: 8px; align-items: center; }
+  .sl-markdown-content .starlight-aside--danger { --aside-bg: var(--error-bg); --aside-line: color-mix(in oklab, var(--error-fg) 45%, var(--error-bg)); --aside-title: var(--error-fg); }
+  .sl-markdown-content .starlight-aside__title { font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 600; letter-spacing: 0; color: var(--aside-title); gap: 8px; align-items: center; }
   .sl-markdown-content .starlight-aside__icon { width: 15px; height: 15px; color: var(--aside-title); }
-  .sl-markdown-content .starlight-aside__content { font-size: 14px; line-height: var(--leading-body); color: var(--fg2); }
+  .sl-markdown-content .starlight-aside__content { font-size: var(--text-base); line-height: var(--leading-body); color: var(--fg2); }
   .sl-markdown-content .starlight-aside__content a { color: var(--aside-title); }
 
   /* ─────────── cards, link cards, link buttons ─────────── */
   .sl-markdown-content .card-grid { gap: 12px; }
-  .sl-markdown-content :is(.card, .sl-link-card) { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: none; padding: 18px 20px; transition: border-color var(--dur) var(--ease); }
+  /* Every content box carries the app's real task-row edge: 1.5px at accent 50%.
+     The WIDTH is what makes it read — 1px at the same colour looks like plain
+     grey on paper. One value, so cards, rows and the release band can't drift
+     apart. (The hero mockup uses 1px because it is a ~0.7 miniature of the app:
+     1.5 × 0.7 ≈ 1.) */
+  .sl-markdown-content :is(.card, .sl-link-card) { border: 1.5px solid color-mix(in oklab, var(--accent) 50%, transparent); border-radius: var(--radius-lg); background: var(--surface); box-shadow: none; padding: 18px 20px; transition: border-color var(--dur) var(--ease); }
   .sl-markdown-content :is(.card, .sl-link-card):hover { border-color: var(--accent-mid); }
   .sl-markdown-content .card { gap: 8px; }
-  .sl-markdown-content .card .title { font-family: var(--font-ui); font-size: 15px; font-weight: 600; color: var(--fg1); gap: 10px; align-items: center; }
+  .sl-markdown-content .card .title { font-family: var(--font-ui); font-size: var(--text-base); font-weight: 600; color: var(--fg1); gap: 10px; align-items: center; }
   .sl-markdown-content .card .icon { width: 16px; height: 16px; padding: 7px; box-sizing: content-box; border: 0; border-radius: var(--radius-md); color: var(--accent); background: var(--accent-light); }
-  .sl-markdown-content :is(.card .body, .sl-link-card .description) { font-size: 14px; line-height: var(--leading-body); color: var(--fg3); }
-  .sl-markdown-content .sl-link-card .title { font-family: var(--font-ui); font-size: 15px; font-weight: 600; color: var(--fg1); }
+  .sl-markdown-content :is(.card .body, .sl-link-card .description) { font-size: var(--text-sm); line-height: var(--leading-body); color: var(--fg3); }
+  .sl-markdown-content .sl-link-card .title { font-family: var(--font-ui); font-size: var(--text-base); font-weight: 600; color: var(--fg1); }
   .sl-markdown-content .sl-link-card .icon { color: var(--fg3); }
   .sl-markdown-content .sl-link-card:hover .icon { color: var(--accent); }
-  .sl-link-button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 20px; border: 1px solid transparent; border-radius: var(--radius-md); font-family: var(--font-ui); font-size: 15px; font-weight: 600; text-decoration: none; transition: opacity var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+  .sl-link-button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 20px; border: 1px solid transparent; border-radius: var(--radius-md); font-family: var(--font-ui); font-size: var(--text-md); font-weight: 600; text-decoration: none; transition: opacity var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
   .sl-link-button.primary { background: var(--accent); color: var(--on-accent); }
   .sl-link-button.primary:hover { opacity: 0.9; }
   .sl-link-button.secondary { background: var(--surface); border-color: var(--border); color: var(--fg1); }
@@ -182,28 +224,36 @@
   .sl-link-button.minimal { color: var(--accent); padding-inline: 4px; }
 
   /* ─────────── badges, steps, tabs, file tree ─────────── */
-  .sl-markdown-content .sl-badge { border: 0; border-radius: var(--radius-sm); background: var(--accent-light); color: var(--accent); font-family: var(--font-ui); font-size: 11px; font-weight: 500; padding: 2px 7px; }
+  .sl-markdown-content .sl-badge { border: 0; border-radius: var(--radius-sm); background: var(--accent-light); color: var(--accent); font-family: var(--font-ui); font-size: var(--text-2xs); font-weight: 500; padding: 2px 7px; }
   .sl-markdown-content .sl-badge.success { background: var(--forest-tint); color: var(--forest); }
   .sl-markdown-content .sl-badge.caution { background: var(--warn-bg); color: var(--warn-fg); }
   .sl-markdown-content .sl-badge.danger { background: var(--error-bg); color: var(--error-fg); }
   .sl-markdown-content .sl-badge.default { background: var(--surface-sunken); color: var(--fg2); }
   .sl-markdown-content .sl-steps { --bullet-size: 26px; }
-  .sl-markdown-content .sl-steps > li::before { background: var(--accent-light); color: var(--accent); font-family: var(--font-ui); font-size: 13px; font-weight: 500; box-shadow: none; }
+  .sl-markdown-content .sl-steps > li::before { background: var(--accent-light); color: var(--accent); font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 500; box-shadow: none; }
   .sl-markdown-content .sl-steps > li::after { background: var(--border); }
   .sl-markdown-content starlight-tabs [role='tablist'] { border-bottom: 1px solid var(--border); gap: 4px; }
-  .sl-markdown-content starlight-tabs [role='tab'] { font-family: var(--font-ui); font-size: 14px; font-weight: 500; color: var(--fg3); --sl-tab-color-border: transparent; }
+  .sl-markdown-content starlight-tabs [role='tab'] { font-family: var(--font-ui); font-size: var(--text-base); font-weight: 500; color: var(--fg3); --sl-tab-color-border: transparent; }
   .sl-markdown-content starlight-tabs [role='tab'][aria-selected='true'] { color: var(--accent); --sl-tab-color-border: var(--accent); }
-  .sl-markdown-content starlight-file-tree { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--code-bg); font-family: var(--font-mono); font-size: 13px; }
+  .sl-markdown-content starlight-file-tree { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--code-bg); font-family: var(--font-mono); font-size: var(--text-sm); }
   .sl-markdown-content starlight-file-tree ul { border-inline-start-color: var(--border); }
   .sl-markdown-content starlight-file-tree :is(.directory > details > summary, .file) { color: var(--fg1); }
   .sl-markdown-content starlight-file-tree svg { fill: var(--fg3); }
 
-  /* ─────────── right sidebar / on this page ─────────── */
+  /* ─────────── right sidebar / on this page ───────────
+     Starlight sizes this column from --sl-sidebar-width (the LEFT rail's width);
+     the docs give it its own token so the two can differ — and so the footer
+     below can span it exactly. */
+  @media (min-width: 72rem) {
+    .right-sidebar-container { width: var(--docs-toc-w); }
+    .right-sidebar { width: var(--docs-toc-w); }
+    [data-has-sidebar][data-has-toc] .main-pane { width: calc(100% - var(--docs-toc-w)); }
+  }
   .right-sidebar { border-inline-start: 0; }
-  .right-sidebar-panel { padding: 40px 20px; }
-  .right-sidebar-panel h2 { font-family: var(--font-ui); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+  .right-sidebar-panel { padding: 44px 20px 44px 40px; }
+  .right-sidebar-panel h2 { font-family: var(--font-ui); font-size: var(--text-2xs); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
   starlight-toc nav ul { border-inline-start: 1px solid var(--border); }
-  starlight-toc a { font-family: var(--font-ui); font-size: 13px; line-height: var(--leading-snug); color: var(--fg3); border: 0; border-inline-start: 1px solid transparent; margin-inline-start: -1px; padding-block: 5px; transition: color var(--dur) var(--ease); }
+  starlight-toc a { font-family: var(--font-ui); font-size: var(--text-sm); line-height: var(--leading-snug); color: var(--fg3); border: 0; border-inline-start: 1px solid transparent; margin-inline-start: -1px; padding-block: 5px; transition: color var(--dur) var(--ease); }
   starlight-toc a:hover { color: var(--fg1); }
   starlight-toc a[aria-current='true'] { color: var(--accent); border-inline-start-color: var(--accent); font-weight: 500; }
   mobile-starlight-toc nav { background: var(--bg); border-bottom: 1px solid var(--border); }
@@ -211,22 +261,53 @@
 
   /* ─────────── pagination + page footer meta ─────────── */
   .pagination-links { gap: 12px; }
-  .pagination-links a { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: none; padding: 14px 18px; gap: 4px; transition: border-color var(--dur) var(--ease); }
+  .pagination-links a { border: 1.5px solid color-mix(in oklab, var(--accent) 50%, transparent); border-radius: var(--radius-lg); background: var(--surface); box-shadow: none; padding: 14px 18px; gap: 4px; transition: border-color var(--dur) var(--ease); }
   .pagination-links a:hover { border-color: var(--accent-mid); }
   .pagination-links svg { color: var(--fg3); }
-  .pagination-links a span:first-child { font-family: var(--font-ui); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
-  .pagination-links .link-title { font-family: var(--font-ui); font-size: 15px; font-weight: 500; color: var(--fg1); }
+  .pagination-links a span:first-child { font-family: var(--font-ui); font-size: var(--text-2xs); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+  .pagination-links .link-title { font-family: var(--font-ui); font-size: var(--text-base); font-weight: 500; color: var(--fg1); }
   .pagination-links a:hover .link-title { color: var(--accent); }
-  footer .meta { font-family: var(--font-ui); font-size: 12px; color: var(--fg3); gap: 12px; }
+  footer .meta { font-family: var(--font-ui); font-size: var(--text-xs); color: var(--fg3); gap: 12px; }
   footer .meta a { color: var(--fg3); text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 3px; }
   footer .meta a:hover { color: var(--accent); }
 
-  /* ─────────── site footer (the landing page's, verbatim) ─────────── */
-  .cm-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 40px; padding: 24px 0 8px; border-top: 0.5px solid var(--border); }
-  .cm-footer .lockup { display: flex; align-items: center; gap: 9px; }
-  .cm-footer .name { font-family: var(--font-display); font-size: 15px; color: var(--fg2); }
+  /* ─────────── site footer ───────────
+     A real way out, not a signature: brand + one line, three short link
+     columns, then a bar with the legal note. Spans the full content column
+     (prose cap removed) and, above 72rem, reaches under the TOC as well. */
+  .main-pane footer :is(.sl-container, .sl-markdown-content) { max-width: none; }
+  .cm-footer { width: 100%; max-width: none; box-sizing: border-box; margin-top: 56px; border-top: 1px solid var(--border); }
+  /* Deterministic reflow: brand beside the links above 62rem, stacked below.
+     `space-between` + wrap put the third column in an unpredictable place — at
+     ~920px it landed on top of the bottom bar. */
+  .cm-footer-top { display: grid; grid-template-columns: 100%; gap: 28px; padding: 28px 0 24px; }
+  @media (min-width: 62rem) { .cm-footer-top { grid-template-columns: minmax(0, 1fr) auto; gap: 48px; } }
+  .cm-footer-brand { display: flex; flex-direction: column; gap: 8px; }
+  .cm-footer .lockup { display: flex; align-items: center; gap: 9px; text-decoration: none; color: inherit; }
+  .cm-footer .name { font-family: var(--font-display); font-size: var(--text-md); color: var(--fg2); white-space: nowrap; }
   .cm-footer .name .tld { color: var(--accent); }
-  .cm-footer .note { font-family: var(--font-ui); font-size: 12px; color: var(--fg3); }
+  .cm-footer-line { font-family: var(--font-ui); font-size: var(--text-sm); color: var(--fg3); margin: 0; }
+  .cm-footer-nav { display: grid; grid-template-columns: repeat(2, minmax(7rem, max-content)); gap: 24px 40px; }
+  @media (min-width: 48rem) { .cm-footer-nav { grid-template-columns: repeat(3, minmax(7rem, max-content)); gap: 28px 48px; } }
+  .cm-footer-col { display: flex; flex-direction: column; gap: 7px; }
+  .cm-footer-head { font-family: var(--font-ui); font-size: var(--text-2xs); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg3); margin-bottom: 2px; }
+  .cm-footer-col a { font-family: var(--font-ui); font-size: var(--text-sm); color: var(--fg2); text-decoration: none; transition: color var(--dur) var(--ease); }
+  .cm-footer-col a:hover { color: var(--accent); }
+  .cm-footer-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding: 14px 0 20px; border-top: 0.5px solid var(--border); }
+  /* The independence notice leads; the credit sits opposite it. */
+  .cm-footer-disclaimer { font-family: var(--font-ui); font-size: var(--text-xs); color: var(--fg3); max-width: 60ch; }
+  .cm-footer-bar .note { font-family: var(--font-ui); font-size: var(--text-xs); color: var(--fg-muted); margin-inline-start: auto; white-space: nowrap; }
+  .cm-footer-bar .note a { color: inherit; text-decoration: none; }
+  .cm-footer-bar .note a:hover { color: var(--accent); }
+  @media (min-width: 72rem) {
+    .main-pane footer .cm-footer { position: relative; z-index: 2; margin-inline-end: calc(-1 * var(--docs-toc-w)); background: var(--bg); }
+  }
+  /* text-decoration inherits down and a child can't take it back, so the reset
+     belongs on the anchor itself (as on .cm-sidebar-lockup). */
+  .cm-footer .lockup { display: flex; align-items: center; gap: 9px; text-decoration: none; color: inherit; }
+  .cm-footer .name { font-family: var(--font-display); font-size: var(--text-base); color: var(--fg2); }
+  .cm-footer .name .tld { color: var(--accent); }
+  .cm-footer .note { font-family: var(--font-ui); font-size: var(--text-xs); color: var(--fg3); }
   .cm-footer .note a { color: var(--fg3); text-decoration: none; }
   .cm-footer .note a:hover { color: var(--accent); }
 
@@ -239,18 +320,26 @@
   .hero .copy { text-align: center; }
   .hero h1 { font-family: var(--font-display); font-size: clamp(32px, 5vw, 44px); font-weight: 400; letter-spacing: var(--tracking-hero); line-height: var(--leading-tight); color: var(--fg1); margin: 0; }
   .hero h1 em, .hero h1 .accent { font-style: italic; color: var(--accent); }
-  .hero .tagline { font-family: var(--font-ui); font-size: 16px; line-height: var(--leading-body); color: var(--fg3); margin-top: 14px; }
+  .hero .tagline { font-family: var(--font-ui); font-size: var(--text-md); line-height: var(--leading-body); color: var(--fg3); margin-top: 14px; }
   .hero .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
+  .sl-link-button { white-space: nowrap; }
   .hero .hero-html { display: flex; justify-content: center; }
-  .hero .hero-html > * { width: min(100%, 26rem); }
-  @media (min-width: 50rem) {
-    .hero { grid-template-columns: 7fr 5fr; gap: 40px; padding-block: 40px 24px; }
+  /* Full column width at every size — a capped mockup reads as "broken image"
+     next to the full-width bands below it. Below 34rem Hero.astro simplifies the
+     mockup's internals instead of letting it clip. */
+  .hero .hero-html > * { width: 100%; }
+  /* The hero goes two-column at 62rem, NOT at Starlight's 50rem: the mockup
+     needs 420px to render a task row without clipping (see Hero.astro), so
+     switching at 800px would leave the copy column near 200px — too narrow for a
+     40px display headline. 62rem is the first width where both columns work. */
+  @media (min-width: 62rem) {
+    .hero { grid-template-columns: minmax(0, 5fr) minmax(420px, 6fr); gap: 40px; padding-block: 40px 24px; }
     .hero .copy { text-align: start; }
     .hero .actions { justify-content: flex-start; }
     .hero .hero-html { order: 2; }
     .hero .hero-html > * { width: 100%; }
   }
-  .cm-hero-anthem { font-family: var(--font-ui); font-size: 13px; color: var(--fg-muted); margin: 18px 0 0; }
+  .cm-hero-anthem { font-family: var(--font-ui); font-size: var(--text-sm); color: var(--fg-muted); margin: 18px 0 0; }
   /* App mockup — macOS-style window chrome, the only "imagery" the brand has. */
   .cm-mockup { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); overflow: hidden; box-shadow: var(--shadow-md); }
   .cm-mockup .chrome { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--bg); }
@@ -264,10 +353,17 @@
      actually set in; the paragraph inherits both. The CTA is matched as a
      DIRECT child so a link inside the line keeps prose styling. */
   .cm-band { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 22px 0; margin-block: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
-  .sl-markdown-content .cm-band-text { font-family: var(--font-display); font-size: 17px; max-width: 70ch; }
-  .sl-markdown-content .cm-band-text p { font-family: inherit; font-size: inherit; font-weight: 400; letter-spacing: var(--tracking-tight); line-height: var(--leading-snug); color: var(--fg2); margin: 0; }
+  /* No `ch` cap: the band is ONE display line beside a fixed CTA, so it takes the
+     free space and wraps only when it must. A 70ch cap measured in Lora 20px came
+     out at 869px, which broke this sentence over two lines while the design spec
+     showed it on one — the flex row is the honest answer to "how wide". */
+  .sl-markdown-content .cm-band-text { font-family: var(--font-display); font-size: var(--text-xl); flex: 1; min-width: 0; }
+  /* One step down on phones — 20px Lora over three lines reads as a headline the
+     page didn't ask for. */
+  @media (max-width: 40rem) { .sl-markdown-content .cm-band-text { font-size: var(--text-md); } }
+  .sl-markdown-content .cm-band-text p { font-family: inherit; font-size: inherit; font-weight: 500; letter-spacing: var(--tracking-tight); line-height: var(--leading-snug); color: var(--fg1); margin: 0; }
   .sl-markdown-content .cm-band-text p + p { margin-top: 10px; }
-  .sl-markdown-content .cm-band > a { font-family: var(--font-ui); font-size: 13px; color: var(--accent); text-decoration: none; margin-inline-start: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+  .sl-markdown-content .cm-band > a { font-family: var(--font-ui); font-size: var(--text-md); font-weight: 500; color: var(--accent); text-decoration: none; margin-inline-start: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; }
   .sl-markdown-content .cm-band > a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
   /* ─────────── themed card (<Card> / <Card href>) ───────────
@@ -278,38 +374,83 @@
      an <a> wrapping the whole card would break as soon as the body contained a
      link (nested anchors are invalid, and the parser tears the card apart).
      Body links are lifted above the overlay so they still work. */
-  .sl-markdown-content .cm-card { position: relative; display: block; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: 18px 20px; box-shadow: none; }
+  .sl-markdown-content .cm-card { position: relative; display: block; border: 1.5px solid color-mix(in oklab, var(--accent) 50%, transparent); border-radius: var(--radius-lg); background: var(--surface); padding: 18px 20px; box-shadow: none; }
   .sl-markdown-content .cm-card:has(.cm-card-link) { transition: border-color var(--dur) var(--ease); }
   .sl-markdown-content .cm-card:has(.cm-card-link):hover { border-color: var(--accent-mid); }
   .sl-markdown-content .cm-card:has(.cm-card-link:focus-visible) { outline: 2px solid var(--accent-mid); outline-offset: 2px; }
-  .sl-markdown-content .cm-card-head { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-size: 15px; font-weight: 600; color: var(--fg1); margin: 0; }
+  .sl-markdown-content .cm-card-head { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-size: var(--text-base); font-weight: 600; color: var(--fg1); margin: 0; }
   .sl-markdown-content .cm-card-link { color: inherit; text-decoration: none; font-weight: inherit; }
   .sl-markdown-content .cm-card-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
   .sl-markdown-content .cm-card-link:focus-visible { outline: none; }
   .sl-markdown-content .cm-card-icon { width: 30px; height: 30px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--accent-light); color: var(--accent); }
   .sl-markdown-content .cm-card-go { margin-inline-start: auto; color: var(--fg3); flex: none; }
   .sl-markdown-content .cm-card:hover .cm-card-go { color: var(--accent); }
-  .sl-markdown-content .cm-card-body { font-size: 14px; line-height: var(--leading-body); color: var(--fg3); margin: 8px 0 0; }
+  .sl-markdown-content .cm-card-body { font-size: var(--text-sm); line-height: var(--leading-body); color: var(--fg3); margin: 8px 0 0; }
   .sl-markdown-content .cm-card-body > :last-child { margin-bottom: 0; }
-  /* Above the stretched overlay, so a link in the body stays clickable. */
-  .sl-markdown-content .cm-card-body a { position: relative; z-index: 1; }
 
   /* ─────────── index list (<IndexList> / <IndexRow>) ───────────
-     The light counterpart to the card grid: a hairline row, title and
-     description on one baseline, no frame, no icon, no arrow. Cards LEAD a
-     page; rows LIST what is left. Same stretched-link mechanism as the card. */
-  .sl-markdown-content .cm-index { display: grid; grid-template-columns: 100%; gap: 0 40px; }
-  @media (min-width: 50rem) { .sl-markdown-content .cm-index { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .sl-markdown-content .cm-index-row { position: relative; display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+     The light counterpart to the card grid: the same box and hairline, but no
+     icon and title + description on ONE line. Cards LEAD a page; rows LIST what
+     is left. Same stretched-link mechanism as the card. */
+  /* Starlight gives every non-first sibling in prose a 16px top margin, via a
+     selector that is NOT limited to direct children — so it reaches inside our
+     own grid and flex containers, where a margin becomes part of the grid cell.
+     In the index list that made row 1 72px tall (56 + 16), stretched every other
+     row to match, and added the margin to `gap` for a 28px rhythm instead of 12.
+     Reset it on the containers we own; `gap` is then the only spacing authority.
+     (Prose spacing outside these containers is Starlight's and stays.) */
+  .sl-markdown-content :is(.cm-index, .cm-band, .cm-latest) > * { margin-top: 0; }
+  .sl-markdown-content .cm-index { display: grid; grid-template-columns: 100%; gap: 12px; }
+  /* Two columns only once each one can hold a title AND its description on one
+     line. On an article page at 50rem the main pane is ~420px, which would give
+     each row ~200px and truncate every description to a few words. */
+  @media (min-width: 62rem) { .sl-markdown-content .cm-index { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .sl-markdown-content .cm-index-row { position: relative; display: flex; align-items: baseline; gap: 12px; padding: 15px 18px; border: 1.5px solid color-mix(in oklab, var(--accent) 50%, transparent); border-radius: var(--radius-lg); background: var(--surface); transition: border-color var(--dur) var(--ease); }
+  .sl-markdown-content .cm-index-row:hover { border-color: var(--accent); }
   .sl-markdown-content .cm-index-row:has(.cm-index-link:focus-visible) { outline: 2px solid var(--accent-mid); outline-offset: 2px; }
-  .sl-markdown-content .cm-index-link { flex: none; font-family: var(--font-ui); font-size: 15px; font-weight: 500; color: var(--fg1); text-decoration: none; transition: color var(--dur) var(--ease); }
-  .sl-markdown-content .cm-index-link::after { content: ''; position: absolute; inset: 0; }
+  .sl-markdown-content .cm-index-link { flex: none; font-family: var(--font-ui); font-size: var(--text-base); font-weight: 500; color: var(--fg1); text-decoration: none; transition: color var(--dur) var(--ease); }
+  .sl-markdown-content .cm-index-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
   .sl-markdown-content .cm-index-link:focus-visible { outline: none; }
   .sl-markdown-content .cm-index-row:hover .cm-index-link { color: var(--accent); }
-  .sl-markdown-content .cm-index-desc { min-width: 0; font-size: 13px; line-height: var(--leading-snug); color: var(--fg3); }
-  .sl-markdown-content .cm-index-desc p { margin: 0; }
-  .sl-markdown-content .cm-index-desc a { position: relative; z-index: 1; }
+  /* A row and a card are THEMSELVES links, so a link inside their description is
+     a competing target. Neutralise its appearance (it keeps working, and the
+     z-index below lifts it above the stretched overlay) rather than letting an
+     autolinked email address change the row's height, colour and underline —
+     which is what a bare `assistant@commit.moi` in MDX did three times. */
+  .sl-markdown-content :is(.cm-index-desc, .cm-card-body) a { color: inherit; text-decoration: none; font-weight: inherit; vertical-align: baseline; position: relative; z-index: 1; }
+  .sl-markdown-content .cm-index-desc { min-width: 0; font-size: var(--text-sm); line-height: var(--leading-snug); color: var(--fg3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sl-markdown-content .cm-index-desc p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ─────────── latest release (<Latest>) ───────────
+     The changelog earns a place ABOVE the section grids: what shipped is what a
+     returning reader came for. It wears the OTHER theme colour — forest when the
+     accent is steel, steel when the accent is forest — so it reads as its own
+     thing next to the accent-bordered section boxes without introducing a hue
+     the brand doesn't own. Both ramps are stable, so the pair simply swaps. */
+  .sl-markdown-content .cm-latest { --latest: var(--forest); --latest-tint: var(--forest-tint); position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin: 0 0 40px; padding: 16px 20px; border: 1.5px solid color-mix(in oklab, var(--latest) 50%, transparent); border-radius: var(--radius-lg); background: var(--latest-tint); transition: border-color var(--dur) var(--ease); }
+  body[data-theme='forest'] .sl-markdown-content .cm-latest { --latest: var(--steel); --latest-tint: var(--steel-tint); }
+  .sl-markdown-content .cm-latest:hover { border-color: var(--latest); }
+  .sl-markdown-content .cm-latest:has(.cm-latest-title:focus-visible) { outline: 2px solid var(--latest); outline-offset: 2px; }
+  .sl-markdown-content .cm-latest-tag { flex: none; white-space: nowrap; font-family: var(--font-ui); font-size: var(--text-2xs); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--latest); background: var(--surface); border: 1px solid color-mix(in oklab, var(--latest) 50%, transparent); border-radius: var(--radius-sm); padding: 2px 7px; }
+  .sl-markdown-content .cm-latest-title { flex: none; font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; letter-spacing: var(--tracking-tight); color: var(--fg1); text-decoration: none; }
+  .sl-markdown-content .cm-latest-title::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  .sl-markdown-content .cm-latest-title:focus-visible { outline: none; }
+  .sl-markdown-content .cm-latest-body { flex: 1; min-width: 0; font-size: var(--text-sm); color: var(--fg2); }
+  .sl-markdown-content .cm-latest-body p { margin: 0; }
+  .sl-markdown-content .cm-latest-go { flex: none; display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-ui); font-size: var(--text-md); font-weight: 500; color: var(--latest); white-space: nowrap; }
 
   /* ─────────── motion ─────────── */
   @media (prefers-reduced-motion: reduce) { * { transition-duration: 1ms !important; animation-duration: 1ms !important; } }
+}
+
+/* ── UNLAYERED, on purpose ───────────────────────────────────────────────
+   Splash pages (no sidebar) get their width from Starlight's own unlayered
+   rule in Page.astro — `html:not([data-has-sidebar]) { --sl-content-width:
+   67.5rem }`. Unlayered declarations win over every @layer, so this override
+   must sit outside `@layer commit-moi` to take effect. 90rem = 1440px: with the
+   64px content padding that puts the first text ~155px from the window edge on a
+   1622px viewport (a 14" MacBook), and centres on anything wider.
+   Article pages are unaffected: they use --docs-content-w. */
+html:not([data-has-sidebar]) {
+  --sl-content-width: 90rem;
 }

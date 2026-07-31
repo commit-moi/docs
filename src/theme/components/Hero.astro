@@ -1,13 +1,35 @@
 ---
 import { Image } from 'astro:assets'
+import avatar from '../assets/avatar-cknyco.png'
+import Icon from './Icon.astro'
 import config from 'virtual:starlight-theme-commit-moi/config'
 
 /* Splash hero for docs.commit.moi — continuous with the landing page:
    marketing-register Lora (400 + italic), the anthem, two actions, and the
    app mockup in macOS-style window chrome. Wrap the emphasised words of the
-   title in <em> in front-matter to get the accent italic. */
+   title in <em> in front-matter to get the accent italic.
+
+   The mockup is built from the real app's anatomy (ui_kits/app/Sidebar.jsx and
+   TaskViews.jsx in the design system) at ~0.7 scale, not from an impression of
+   it: quick-find above the six status views, PROJECTS with a progress ring,
+   SPACES with mono repo names, the account row; and on the right the Lora page
+   title, the composer, and task rows carrying their real columns — checkbox,
+   title, sync mark, project chip, mono due time, area dot — including the
+   overdue and syncing states, which are the app's two most recognisable rows.
+
+   Replace it with a real screenshot by setting `hero.image.file` in front
+   matter; `hero.image.html` swaps in arbitrary markup. */
 const { data } = Astro.locals.starlightRoute.entry
 const { title = data.title, tagline, image, actions = [] } = data.hero ?? {}
+
+const views = [
+  { label: 'Inbox', icon: 'inbox', count: '3' },
+  { label: 'Today', icon: 'calendar', count: '5', current: true },
+  { label: 'Upcoming', icon: 'calendar-clock', count: '12' },
+  { label: 'Anytime', icon: 'layers', count: '' },
+  { label: 'Someday', icon: 'archive', count: '' },
+  { label: 'Logbook', icon: 'check-check', count: '' },
+]
 ---
 
 <div class="hero">
@@ -36,20 +58,91 @@ const { title = data.title, tagline, image, actions = [] } = data.hero ?? {}
         <div class="cm-mockup" set:html={image.html} />
       ) : (
         <div class="cm-mockup" aria-hidden="true">
-          <div class="chrome"><i></i><i></i><i></i></div>
-          <div class="cm-mockup-body">
-            <div class="cm-mockup-rail">
-              <span class="cm-mockup-word">commit<b>.moi</b></span>
-              <span class="row is-current">Today</span>
-              <span class="row">Upcoming</span>
-              <span class="row">Anytime</span>
-              <span class="row">Logbook</span>
+          <div class="chrome"><i /><i /><i /></div>
+          <div class="mk">
+            <div class="mk-rail">
+              <span class="mk-word">commit<b>.moi</b></span>
+              <span class="mk-find">
+                <Icon name="search" size={11} />
+                <span class="lbl">Search</span>
+                <span class="kbd">⌘K</span>
+              </span>
+              {views.map((v) => (
+                <span class:list={['mk-nav', { on: v.current }]}>
+                  <Icon name={v.icon} size={13} />
+                  <span class="lbl">{v.label}</span>
+                  {v.count && <span class="ct">{v.count}</span>}
+                </span>
+              ))}
+              <span class="mk-head">Projects<Icon name="plus" size={10} /></span>
+              <span class="mk-nav">
+                <svg class="ring" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="8" />
+                  <circle cx="10" cy="10" r="8" class="fg" />
+                </svg>
+                <span class="lbl">Move flat</span>
+                <span class="ct">7</span>
+              </span>
+              <span class="mk-head">Spaces</span>
+              <span class="mk-nav on2">
+                <i class="dot tasks" />
+                <span class="repo">commit-tasks</span>
+              </span>
+              <span class="mk-nav">
+                <i class="dot cook" />
+                <span class="repo">commit-cookbook</span>
+                <span class="ct">4</span>
+              </span>
+              <span class="mk-acct">
+                <Image class="ava" src={avatar} alt="" width={36} height={36} />
+                <span class="lbl">cknyco</span>
+              </span>
             </div>
-            <div class="cm-mockup-list">
-              <span class="cm-mockup-title">Today</span>
-              <span class="task"><i class="check"></i>Read the docs, once</span>
-              <span class="task"><i class="check"></i>Move the cookbook to its own space</span>
-              <span class="task"><i class="check"></i>Email the plumber</span>
+
+            <div class="mk-main">
+              <span class="mk-title">Today</span>
+              <span class="mk-composer">
+                <i class="box" />
+                <span class="ph">Add a task…</span>
+                <span class="kbd">⌘↵</span>
+              </span>
+              <span class="mk-row">
+                <i class="box" />
+                <span class="t">Read the docs, once</span>
+                <span class="time">09:00</span>
+                <span class="due">Today</span>
+                <i class="area work" />
+              </span>
+              <span class="mk-row over">
+                <i class="box" />
+                <span class="t">Renew the bike insurance</span>
+                <span class="od">Overdue</span>
+                <i class="area fin" />
+              </span>
+              <span class="mk-row">
+                <i class="box" />
+                <span class="t">Move the cookbook to its own space</span>
+                <span class="chip">
+                  <svg class="ring" viewBox="0 0 20 20">
+                    <circle cx="10" cy="10" r="8" />
+                    <circle cx="10" cy="10" r="8" class="fg" />
+                  </svg>
+                  Move flat
+                </span>
+                <i class="area home" />
+              </span>
+              <span class="mk-row dim">
+                <i class="box" />
+                <span class="t">Email the plumber</span>
+                <span class="sync"><Icon name="refresh-cw" size={11} /></span>
+                <i class="area home" />
+              </span>
+              <span class="mk-row done">
+                <i class="box is-done"><Icon name="check" size={8} /></i>
+                <span class="t">Book the sailing licence exam</span>
+                <span class="due">Today</span>
+                <i class="area learn" />
+              </span>
             </div>
           </div>
         </div>
@@ -61,15 +154,94 @@ const { title = data.title, tagline, image, actions = [] } = data.hero ?? {}
 <style>
   /* Mockup internals only. The hero's LAYOUT lives in styles/base.css: Astro
      scopes component CSS, so a replaced override inherits nothing from
-     Starlight's original — and docs-chrome layout belongs in one file. */
-  .cm-mockup-body { display: grid; grid-template-columns: 92px 1fr; min-height: 208px; }
-  .cm-mockup-rail { display: flex; flex-direction: column; gap: 6px; padding: 14px 10px; background: var(--bg); border-inline-end: 1px solid var(--border); }
-  .cm-mockup-word { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--accent); margin-bottom: 8px; }
-  .cm-mockup-word b { color: var(--fg1); font-weight: 700; }
-  .cm-mockup-rail .row { font-size: 10.5px; color: var(--fg3); padding: 3px 6px; border-radius: var(--radius-xs); border-inline-start: 2px solid transparent; }
-  .cm-mockup-rail .row.is-current { color: var(--accent); background: var(--accent-tint); border-inline-start-color: var(--accent); }
-  .cm-mockup-list { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; }
-  .cm-mockup-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--fg1); margin-bottom: 4px; }
-  .cm-mockup-list .task { display: flex; align-items: center; gap: 9px; font-size: 11.5px; color: var(--fg2); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 7px 10px; }
-  .cm-mockup-list .check { width: 11px; height: 11px; border: 1.5px solid var(--accent-mid); border-radius: var(--radius-full); flex: none; }
+     Starlight's original — and docs-chrome layout belongs in one file.
+
+     Every value here is a design-system token or a proportional reduction of
+     one from the app source. Area-dot hues come from the --area-* tokens with
+     a documented fallback, so a token rename shows up as grey, never as a
+     wrong colour. */
+  .mk { display: grid; grid-template-columns: 152px minmax(0, 1fr); min-height: 300px; font-family: var(--font-ui); }
+
+  /* ── sidebar (Sidebar.jsx, the app's 220px rail → 152px here) ── */
+  .mk-rail { display: flex; flex-direction: column; gap: 1px; padding: 14px 10px 10px; background: var(--bg); border-inline-end: 1px solid var(--border); }
+  .mk-word { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--accent); padding: 0 4px 12px; }
+  .mk-word b { color: var(--fg1); font-weight: 700; }
+  .mk-find { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; padding: 5px 7px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--fg3); font-size: 10px; }
+  .mk-find .lbl { flex: 1; }
+  .mk-find .kbd, .mk-composer .kbd { font-family: var(--font-mono); font-size: 8.5px; color: var(--fg3); border: 1px solid var(--border); border-radius: 3px; padding: 0 3px; }
+  .mk-nav { display: flex; align-items: center; gap: 8px; padding: 4px 7px; border-radius: var(--radius-xs); color: var(--fg1); font-size: 10.5px; }
+  .mk-nav > :global(svg) { color: var(--fg2); flex: none; }
+  .mk-nav .lbl { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mk-nav .ct { font-size: 9px; color: var(--fg3); font-variant-numeric: tabular-nums; }
+  /* Active row: accent tint + a 3px inset accent edge — the app uses an inset
+     box-shadow, not a border, so the row never shifts. */
+  .mk-nav.on { color: var(--accent); background: var(--accent-tint); box-shadow: inset 3px 0 0 var(--accent); }
+  .mk-nav.on > :global(svg) { color: var(--accent); }
+  .mk-nav.on2 { background: var(--accent-tint); box-shadow: inset 3px 0 0 var(--accent); }
+  .mk-nav.on2 .repo { color: var(--fg1); font-weight: 500; }
+  .mk-nav .repo { flex: 1; font-family: var(--font-mono); font-size: 9px; letter-spacing: -0.2px; color: var(--fg2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mk-head { display: flex; align-items: center; justify-content: space-between; font-size: 8px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg3); padding: 12px 7px 4px; }
+  .mk-head :global(svg) { color: var(--fg3); }
+  .mk-rail .mk-head + .mk-nav { margin-top: 0; }
+  .dot { width: 7px; height: 7px; border-radius: var(--radius-full); flex: none; }
+  .dot.tasks { background: var(--space-tasks, var(--accent)); }
+  .dot.cook { background: var(--space-cookbook, var(--fg3)); }
+  .ring { width: 13px; height: 13px; flex: none; }
+  .ring circle { fill: none; stroke: color-mix(in oklab, var(--accent) 28%, transparent); stroke-width: 2.6; }
+  .ring circle.fg { stroke: var(--accent); stroke-linecap: round; stroke-dasharray: 50.27; stroke-dashoffset: 17.6; transform: rotate(-90deg); transform-origin: 10px 10px; }
+  .mk-acct { display: flex; align-items: center; gap: 8px; margin-top: auto; padding: 10px 7px 0; border-top: 1px solid var(--border); font-size: 10px; color: var(--fg1); }
+  .ava { width: 18px; height: 18px; border-radius: var(--radius-full); background: var(--surface-sunken); border: 1px solid var(--border); flex: none; object-fit: cover; }
+
+  /* ── content (TaskViews.jsx) ── */
+  .mk-main { display: flex; flex-direction: column; gap: 5px; padding: 16px 16px 18px; min-width: 0; }
+  .mk-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--fg1); margin-bottom: 6px; }
+  .mk-composer { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+  .mk-composer .ph { flex: 1; font-size: 10.5px; color: var(--fg3); }
+  /* Rows: the app's fixed-column grid — checkbox · title(1fr) · sync · project ·
+     time · due · area. Fixed trailing widths keep everything aligned down the
+     list, which is why sparse rows don't reflow. The title track carries a FLOOR:
+     the fixed tracks plus gaps need ~128px, so a bare 1fr would collapse the
+     title to zero as soon as the mockup got narrow. The row therefore needs
+     ~218px, the panel ~250px with its padding, and the whole mockup ~420px —
+     which is why base.css floors the hero's mockup column at 420px. Change one
+     of those numbers and check the other. */
+  .mk-row { display: grid; grid-template-columns: 15px minmax(90px, 1fr) 11px auto 26px 26px 8px; align-items: center; column-gap: 7px; padding: 7px 8px; border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent); border-radius: var(--radius-md); }
+  .box { grid-column: 1; width: 13px; height: 13px; border: 1.5px solid color-mix(in oklab, var(--accent) 50%, transparent); border-radius: var(--radius-full); flex: none; display: inline-flex; align-items: center; justify-content: center; color: var(--on-accent); }
+  .box.is-done { background: var(--accent); border-color: var(--accent); }
+  .mk-row .t { grid-column: 2; font-size: 10.5px; color: var(--fg1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mk-row .sync { grid-column: 3; display: inline-flex; color: var(--fg3); }
+  .mk-row .chip { grid-column: 4; justify-self: start; display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px 1px 3px; border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent); border-radius: var(--radius-full); font-size: 8.5px; color: var(--fg2); white-space: nowrap; }
+  .mk-row .time { grid-column: 5; text-align: end; font-family: var(--font-mono); font-size: 8.5px; color: var(--fg3); }
+  .mk-row .due { grid-column: 6; text-align: end; font-size: 8.5px; color: var(--fg3); white-space: nowrap; }
+  .area { grid-column: 7; width: 7px; height: 7px; border-radius: var(--radius-full); justify-self: center; }
+  .area.work { background: var(--area-work, var(--fg3)); }
+  .area.fin { background: var(--area-finance, var(--fg3)); }
+  .area.home { background: var(--area-personal, var(--fg3)); }
+  .area.learn { background: var(--area-learning, var(--fg3)); }
+  /* Overdue: one red edge and one OVERDUE label spanning both date lanes —
+     never three red things at once. */
+  .mk-row.over { border: 1.5px solid var(--overdue-line, var(--error-fg)); }
+  .mk-row.over .box { border-color: var(--overdue-line, var(--error-fg)); }
+  .mk-row.over .t { color: var(--overdue-fg, var(--error-fg)); }
+  .mk-row .od { grid-column: 5 / 7; justify-self: end; font-size: 7.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--overdue-line, var(--error-fg)); white-space: nowrap; }
+  /* Pending write: the row dims, nothing else moves. */
+  .mk-row.dim .t, .mk-row.dim .sync { opacity: 0.55; }
+  .mk-row.done .t { color: var(--fg3); text-decoration: line-through; }
+
+  /* ── phones ──
+     Below ~34rem the mockup is narrower than the 420px a full row needs, so the
+     row would clip its meta instead of shrinking. Drop the decorative columns
+     (project chip, time, due, sync mark) and narrow the rail: what survives is
+     what the hero is actually saying — a rail, a list, a checked task, an
+     overdue one. Keep this in step with the 62rem hero switch in base.css. */
+  @media (max-width: 34rem) {
+    .mk { grid-template-columns: 112px minmax(0, 1fr); min-height: 0; }
+    .mk-rail { padding: 12px 8px 8px; }
+    .mk-rail .mk-find, .mk-rail .ct { display: none; }
+    .mk-main { padding: 12px 12px 14px; }
+    .mk-row { grid-template-columns: 15px minmax(0, 1fr) auto 8px; column-gap: 6px; }
+    .mk-row :is(.sync, .chip, .time, .due) { display: none; }
+    .mk-row .od { grid-column: 3; justify-self: end; }
+    .area { grid-column: 4; }
+  }
 </style>

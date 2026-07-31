@@ -21,7 +21,7 @@ const home = locale ? `/${locale}/` : '/'
     <div class="cm-sidebar-foot">
       {config.accentSwitch && (
         <div class="cm-accent-switch" role="group" aria-label="Accent colour">
-          <span class="label">Accent</span>
+          <span class="label" data-cm-accent-label>{config.accent === 'forest' ? '#forest' : '#steelblue'}</span>
           <button
             type="button"
             class="cm-accent-dot"
@@ -47,15 +47,29 @@ const home = locale ? `/${locale}/` : '/'
   )
 }
 
-<script is:inline>
+<script is:inline data-cm-accent={config.accent}>
   (() => {
     const dots = document.querySelectorAll('.cm-accent-dot')
     if (!dots.length) return
-    const current = () => (document.body.dataset.theme === 'forest' ? 'forest' : 'steel')
-    const sync = () =>
-      dots.forEach((dot) =>
-        dot.setAttribute('aria-pressed', String(dot.dataset.accentValue === current())),
-      )
+    const fallback = document.currentScript?.dataset.cmAccent || 'steel'
+    const label = document.querySelector('[data-cm-accent-label]')
+    const NAMES = { steel: '#steelblue', forest: '#forest' }
+    /* Resolve from localStorage, NOT from `body.dataset.theme`: the sidebar is
+       parsed before <main>, so the Banner override that sets that attribute has
+       not run yet — reading it here would show steel to a Forest user. Same
+       resolution rule as Banner.astro; keep the two in step. */
+    const current = () => {
+      try {
+        const saved = localStorage.getItem('commit-moi-accent')
+        if (saved === 'steel' || saved === 'forest') return saved
+      } catch {}
+      return fallback
+    }
+    const sync = () => {
+      const now = current()
+      dots.forEach((dot) => dot.setAttribute('aria-pressed', String(dot.dataset.accentValue === now)))
+      if (label) label.textContent = NAMES[now]
+    }
     dots.forEach((dot) =>
       dot.addEventListener('click', () => {
         const value = dot.dataset.accentValue

@@ -1,17 +1,53 @@
 ---
 import Default from '@astrojs/starlight/components/Footer.astro'
 import config from 'virtual:starlight-theme-commit-moi/config'
+
+/* Starlight's page footer (prev/next + meta), then the site footer.
+   The link columns are deliberately hardcoded rather than configurable: they are
+   this site's own navigation, and one file is easier to edit than a config
+   schema. Keep each column to 2–4 links — a docs footer is a way out, not a
+   sitemap. Styles live in styles/base.css. */
 ---
 
 <Default><slot /></Default>
 
-{/* The landing page's footer, reused verbatim. */}
 <div class="cm-footer">
-  <a class="lockup" href={config.appUrl}>
-    <span class="cm-mark" aria-hidden="true" style="--mark-size:24px">
-      <span class="c">c</span><span class="rule"></span><span class="node"></span>
-    </span>
-    <span class="name">commit<span class="tld">.moi</span></span>
-  </a>
-  <div class="note" set:html={config.footerNote} />
+  <div class="cm-footer-top">
+    <div class="cm-footer-brand">
+      <a class="lockup" href={config.appUrl}>
+        <span class="cm-mark" aria-hidden="true" style="--mark-size:26px">
+          <span class="c">c</span><span class="rule"></span><span class="node"></span>
+        </span>
+        <span class="name">commit<span class="tld">.moi</span></span>
+      </a>
+      <p class="cm-footer-line">A to-do list you can grep.</p>
+    </div>
+
+    <nav class="cm-footer-nav" aria-label="Footer">
+      <div class="cm-footer-col">
+        <span class="cm-footer-head">Docs</span>
+        <a href="/getting-started/">Getting started</a>
+        <a href="/spaces/">Spaces</a>
+        <a href="/keyboard-shortcuts/">Shortcuts</a>
+        <a href="/changelog/">Changelog</a>
+      </div>
+      <div class="cm-footer-col">
+        <span class="cm-footer-head">Your data</span>
+        <a href="/your-data-and-github/">What we store</a>
+        <a href="/your-data-and-github/#leaving">How to leave</a>
+        <a href="/troubleshooting/">Troubleshooting</a>
+      </div>
+      <div class="cm-footer-col">
+        <span class="cm-footer-head">Source</span>
+        <a href={config.repoUrl}>GitHub</a>
+        <a href={`${config.repoUrl}/docs/issues`}>Report an issue</a>
+        <a href={config.appUrl}>Open app</a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="cm-footer-bar">
+    <span class="cm-footer-disclaimer">{config.disclaimer}</span>
+    <span class="note" set:html={config.footerNote} />
+  </div>
 </div>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <defs>
+    
+  </defs>
+  <rect width="80" height="80" rx="20" ry="20" fill="#3D6B8E"></rect>
+  <text x="10" y="36" font-family="Lora, Georgia, serif" font-size="76" font-weight="400" fill="white" dominant-baseline="middle">c</text>
+  <line x1="62" y1="0" x2="62" y2="80" stroke="rgba(255,255,255,0.28)" stroke-width="3"></line>
+  <circle cx="62" cy="40" r="9" fill="white" stroke="#3D6B8E" stroke-width="3"></circle>
+</svg>

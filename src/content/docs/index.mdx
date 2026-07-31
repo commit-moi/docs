@@ -1,0 +1,63 @@
+---
+title: commit.moi docs
+description: The user guide for commit.moi — the calm task manager whose only database is your own GitHub account.
+template: splash
+hero:
+  title: Your life, <em>organized at last.</em>
+  tagline: The user guide for commit.moi — the calm task manager whose only database is your own GitHub account.
+  actions:
+    - text: Get started
+      link: /getting-started/
+      variant: primary
+    - text: How your data works
+      link: /your-data-and-github/
+      variant: secondary
+---
+
+import { CardGrid } from '@astrojs/starlight/components';
+import { Card, TrustBand } from '@theme/components';
+
+## Start here
+
+<CardGrid>
+  <Card title="Getting started" icon="rocket" href="/getting-started/">
+    Sign in with GitHub, get your first space, capture your first task. Four minutes.
+  </Card>
+  <Card title="Tasks & areas" icon="square-check-big" href="/tasks-and-areas/">
+    Inbox, Today, Upcoming, Anytime, Someday, Logbook — and the labels that cut across them.
+  </Card>
+  <Card title="Spaces" icon="layout-grid" href="/spaces/">
+    One private repo per part of your life. Tasks, cookbook, journal, notes.
+  </Card>
+  <Card title="Projects" icon="goal" href="/projects/">
+    Milestones with a progress ring — a place for tasks that belong together.
+  </Card>
+</CardGrid>
+
+<TrustBand href="/your-data-and-github/" cta="Your data & GitHub">
+  If commit.moi disappeared tomorrow, nothing happens to your tasks. They're
+  issues in your repos.
+</TrustBand>
+
+## Everything else
+
+<CardGrid>
+  <Card title="Email capture" icon="mail" href="/email-capture/">
+    Forward anything to assistant@commit.moi.
+  </Card>
+  <Card title="Keyboard shortcuts" icon="keyboard" href="/keyboard-shortcuts/">
+    ⌘K, and the ten keys that matter.
+  </Card>
+  <Card title="Your data & GitHub" icon="shield-check" href="/your-data-and-github/">
+    What we store. What we never touch.
+  </Card>
+  <Card title="Account & settings" icon="settings" href="/account-and-settings/">
+    Theme, dates, timezone, signing out.
+  </Card>
+  <Card title="Troubleshooting" icon="life-buoy" href="/troubleshooting/">
+    When GitHub is unreachable or a write fails.
+  </Card>
+  <Card title="Changelog" icon="scroll-text" href="/changelog/">
+    What shipped, newest first.
+  </Card>
+</CardGrid>

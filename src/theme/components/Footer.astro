@@ -1,0 +1,17 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro'
+import config from 'virtual:starlight-theme-commit-moi/config'
+---
+
+<Default><slot /></Default>
+
+{/* The landing page's footer, reused verbatim. */}
+<div class="cm-footer">
+  <a class="lockup" href={config.appUrl}>
+    <span class="cm-mark" aria-hidden="true" style="--mark-size:24px">
+      <span class="c">c</span><span class="rule"></span><span class="node"></span>
+    </span>
+    <span class="name">commit<span class="tld">.moi</span></span>
+  </a>
+  <div class="note" set:html={config.footerNote} />
+</div>

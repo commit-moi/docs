@@ -1,0 +1,13 @@
+---
+/* Mobile-only lockup: on desktop the wordmark sits at the top of the sidebar
+   (see Sidebar.astro), so base.css hides this above 50rem. */
+const { locale } = Astro.locals.starlightRoute
+const href = locale ? `/${locale}/` : '/'
+---
+
+<a {href} class="site-title sl-flex">
+  <span class="cm-mark" aria-hidden="true">
+    <span class="c">c</span><span class="rule"></span><span class="node"></span>
+  </span>
+  <span class="cm-wordmark">commit<span class="tld">.moi</span></span>
+</a>

@@ -1,0 +1,18 @@
+---
+import Default from '@astrojs/starlight/components/Header.astro'
+import config from 'virtual:starlight-theme-commit-moi/config'
+
+/* Starlight's header is WRAPPED, not replaced: its search mount, social icons
+   and mobile menu button are fiddly and change between versions, and none of
+   them need restyling beyond what base.css already does. The one addition is
+   the way back to the app. */
+---
+
+<Default><slot /></Default>
+
+{config.appUrl && (
+  <>
+    <span class="cm-header-rule" aria-hidden="true"></span>
+    <a class="cm-app-link" href={config.appUrl}>Open app →</a>
+  </>
+)}

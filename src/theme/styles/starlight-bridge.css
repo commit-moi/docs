@@ -1,0 +1,146 @@
+/* ============================================================
+   commit.moi docs — the Starlight bridge
+   ONE job: tell Starlight how to use commit.moi's tokens.
+   Nothing here decides what a colour IS — that lives in
+   colors_and_type.css — the design system's own file, byte for byte
+   (the same file devapp consumes). Different
+   questions, different change cadence:
+
+     colors_and_type.css   what commit.moi's colours and type are
+     starlight-bridge.css  how Starlight should use them   ← this file
+     base.css              what the docs chrome looks like
+
+   So a brand change is a file copy, and a Starlight upgrade only
+   ever touches this file.
+
+   LIGHT ONLY. The app has no dark mode, so the same values are
+   declared for :root, [data-theme='light'] AND [data-theme='dark'] —
+   a visitor whose OS prefers dark still gets warm paper, and the
+   toggle is removed (see ThemeSelect override).
+
+   ACCENT: the Steel ⇄ Forest swap reuses the design system's own
+   `[data-theme="forest"]` block, applied to <body> (never <html>,
+   which Starlight owns for light/dark). No accent value is
+   re-declared here — there is exactly one source for the ramp.
+   ============================================================ */
+@layer commit-moi {
+  :root {
+    /* ---- The only values the docs surface adds ----
+       All derived: the rail is the app's sidebar width, and the code
+       fill is a mix of the alt section fill and paper, so no new hex
+       enters the system. */
+    --docs-sidebar-w: 220px;
+    --docs-content-w: 720px;
+    --docs-toc-w: 208px;
+    --docs-nav-h: 64px;
+    --code-bg: color-mix(in oklab, var(--surface-sunken) 45%, var(--bg));
+  }
+
+  :root:root,
+  :root[data-theme='light'],
+  :root[data-theme='dark'] {
+    color-scheme: light;
+
+    /* ---- Type ---- */
+    --sl-font: var(--font-ui);
+    --sl-font-mono: var(--font-mono);
+    --sl-line-height: var(--leading-body);
+    --sl-line-height-headings: var(--leading-snug);
+
+    /* ---- Ground & ink ----
+       Starlight treats --sl-color-white as "brightest ink" and
+       --sl-color-black as "the ground", so both invert here. */
+    --sl-color-bg: var(--bg);
+    --sl-color-bg-nav: var(--bg);
+    --sl-color-bg-sidebar: var(--bg);
+    --sl-color-black: var(--bg);
+    --sl-color-white: var(--fg1);
+    --sl-color-text: var(--fg2);
+    --sl-color-text-invert: var(--on-accent);
+    --sl-color-bg-inline-code: var(--code-bg);
+    --sl-color-bg-accent: var(--accent);
+
+    /* Warm ink ramp — gray-1 nearest the ink, gray-7 nearest the paper. */
+    --sl-color-gray-1: var(--fg1);
+    --sl-color-gray-2: var(--fg2);
+    --sl-color-gray-3: var(--fg3);
+    --sl-color-gray-4: var(--fg3);
+    --sl-color-gray-5: var(--border-strong);
+    --sl-color-gray-6: var(--border);
+    --sl-color-gray-7: var(--surface-sunken);
+
+    /* ---- Accent ---- */
+    --sl-color-accent-low: var(--accent-light);
+    --sl-color-accent: var(--accent);
+    --sl-color-accent-high: var(--accent-hover);
+    --sl-color-text-accent: var(--accent);
+
+    /* ---- Hairlines & overlays ---- */
+    --sl-color-hairline: var(--border);
+    --sl-color-hairline-light: var(--border);
+    --sl-color-hairline-shade: var(--border);
+    --sl-color-backdrop-overlay: var(--scrim);
+
+    /* ---- Elevation ---- */
+    --sl-shadow-sm: var(--shadow-sm);
+    --sl-shadow-md: var(--shadow-md);
+    --sl-shadow-lg: var(--shadow-menu);
+
+    /* ---- Semantic hues — the design system's own status colours, so an
+       aside or badge can never introduce a foreign hue. ---- */
+    --sl-color-blue: var(--accent);
+    --sl-color-blue-low: var(--accent-light);
+    --sl-color-blue-high: var(--accent-hover);
+    --sl-color-green: var(--forest);
+    --sl-color-green-low: var(--forest-tint);
+    --sl-color-green-high: var(--forest-hover);
+    --sl-color-orange: var(--warn-border);
+    --sl-color-orange-low: var(--warn-bg);
+    --sl-color-orange-high: var(--warn-fg);
+    --sl-color-red: var(--error-border);
+    --sl-color-red-low: var(--error-bg);
+    --sl-color-red-high: var(--error-fg);
+    --sl-color-purple: var(--accent-mid);
+    --sl-color-purple-low: var(--accent-light);
+    --sl-color-purple-high: var(--accent-hover);
+
+    /* ---- Banner ---- */
+    --sl-color-banner-bg: var(--surface-dark);
+    --sl-color-banner-text: var(--bg);
+
+    /* ---- Layout ---- */
+    --sl-nav-height: var(--docs-nav-h);
+    --sl-nav-pad-x: 24px;
+    --sl-nav-pad-y: 12px;
+    --sl-sidebar-width: var(--docs-sidebar-w);
+    --sl-sidebar-pad-x: 16px;
+    --sl-content-width: var(--docs-content-w);
+    --sl-content-pad-x: 24px;
+    --sl-mobile-toc-height: 48px;
+
+    /* ---- Type scale — the design system's compact scale, not Starlight's ---- */
+    --sl-text-2xs: 11px;
+    --sl-text-xs: 12px;
+    --sl-text-sm: 13px;
+    --sl-text-base: 15px;
+    --sl-text-lg: 16px;
+    --sl-text-xl: 18px;
+    --sl-text-2xl: 20px;
+    --sl-text-3xl: 24px;
+    --sl-text-4xl: 28px;
+    --sl-text-5xl: 32px;
+    --sl-text-6xl: 44px;
+    --sl-text-code: 13.5px;
+    --sl-text-code-sm: 12.5px;
+    --sl-text-h1: 32px;
+    --sl-text-h2: 20px;
+    --sl-text-h3: 17px;
+    --sl-text-h4: 15px;
+    --sl-text-h5: 13px;
+  }
+
+  ::selection {
+    background: var(--accent-tint-12);
+    color: var(--fg1);
+  }
+}

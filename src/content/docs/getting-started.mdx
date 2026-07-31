@@ -1,0 +1,69 @@
+---
+title: Getting started
+description: Sign in with GitHub, get your first space, and capture your first task. Four minutes, and nothing to configure.
+---
+
+import { Steps, CardGrid, Aside } from '@astrojs/starlight/components';
+import { Card } from '@theme/components';
+
+commit.moi is a task manager with no database of its own. You sign in with
+GitHub, and everything you write is stored in a private repository you own.
+There is nothing to set up, nothing to migrate, and nothing to cancel later.
+
+<Steps>
+
+1. ### Sign in with GitHub
+
+   Open [commit.moi](https://commit.moi) and choose **Sign in with GitHub**.
+   We never see your password — GitHub does the signing in, and hands us a
+   token you can revoke at any time.
+
+2. ### Let your first space be created
+
+   On your first visit we create one private repository, `commit-tasks`, in
+   your own account. That repository is your first **space**. You will see it
+   on github.com immediately.
+
+3. ### Capture a task
+
+   Type into the composer at the top of any list and press <kbd>↵</kbd>. The
+   task appears at once and is written to GitHub in the background as an issue.
+
+4. ### Choose when it matters
+
+   Give the task a due date, or leave it in **Anytime**. Nothing nags you, and
+   nothing is overdue until you said it was due.
+
+</Steps>
+
+## What just happened
+
+| You did | GitHub got |
+| --- | --- |
+| Signed in | An OAuth grant you can revoke |
+| Got a space | A private repository, `commit-tasks` |
+| Added a task | An issue in that repository |
+| Completed a task | A closed issue |
+
+<Aside type="note" title="Nothing is hidden">
+Open the repository on github.com and you will find your tasks as issues, in
+plain text, with full history. Nothing lives behind our UI that you can't see
+there.
+</Aside>
+
+## Where to go next
+
+<CardGrid>
+  <Card title="Tasks & areas" icon="square-check-big" href="/tasks-and-areas/">
+    The six status views, due dates, and the labels that cut across them.
+  </Card>
+  <Card title="Spaces" icon="layout-grid" href="/spaces/">
+    Give a part of your life its own private repository.
+  </Card>
+  <Card title="Email capture" icon="mail" href="/email-capture/">
+    Forward anything to assistant@commit.moi and let it land in the right place.
+  </Card>
+  <Card title="Keyboard shortcuts" icon="keyboard" href="/keyboard-shortcuts/">
+    ⌘K, and the ten keys that matter.
+  </Card>
+</CardGrid>

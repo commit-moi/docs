@@ -204,6 +204,11 @@ and **reuse the app's glyph for a concept** instead of picking a new one.
   paragraphs at best, a torn-apart layout at worst. Wrap in a `<div>` and set
   the type one level down (`.cm-band-text p`, `.cm-card-body`). The same rule
   is why the card links its title instead of wrapping itself in an anchor.
+- **Font-relative units don't travel.** `ch`, `em` and `ex` are measured in the
+  font *and size* of the element carrying them, so moving a `max-width: 70ch`
+  to a wrapper silently re-measures it in whatever that wrapper inherited. Set
+  `font-family` and `font-size` on the element that owns the unit — see
+  `.cm-band-text`.
 
 ## Design reference
 

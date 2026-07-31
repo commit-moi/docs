@@ -1,0 +1,53 @@
+// docs.commit.moi — reference config for the `commit-moi/docs` repo.
+// Copy to astro.config.mjs (or .ts) and delete these comments.
+// The theme is VENDORED at ./src/theme — no npm install, edit in place.
+import starlight from '@astrojs/starlight'
+import { defineConfig } from 'astro/config'
+import starlightThemeCommitMoi from './src/theme/index.ts'
+
+export default defineConfig({
+  site: 'https://docs.commit.moi',
+  integrations: [
+    starlight({
+      title: 'commit.moi docs',
+      description: 'The user guide for commit.moi — your life, organized at last.',
+      // The theme supplies the wordmark lockup, so no `logo` is needed.
+      favicon: '/favicon.svg',
+      editLink: { baseUrl: 'https://github.com/commit-moi/docs/edit/main/' },
+      social: [
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/commit-moi' },
+      ],
+      // English only at launch; add `locales` when that changes.
+      // Search is Pagefind (Starlight's default) — the theme restyles it.
+      // Light only: no theme toggle is rendered.
+      plugins: [
+        starlightThemeCommitMoi({
+          // themeBase: './src/theme',  // change only if you move the folder
+          accent: 'steel',
+          accentSwitch: true,
+          trustLine: 'Nothing lives behind our UI that you can’t see on github.com.',
+        }),
+      ],
+      // Sidebar labels are kept short on purpose — the rail is 220px, the
+      // app's own sidebar width.
+      sidebar: [
+        {
+          label: 'Start here',
+          items: ['getting-started', 'tasks-and-areas', 'spaces', 'projects'],
+        },
+        {
+          label: 'Capture',
+          items: ['email-capture', 'keyboard-shortcuts'],
+        },
+        {
+          label: 'Your data',
+          items: ['your-data-and-github', 'account-and-settings'],
+        },
+        {
+          label: 'Help',
+          items: ['troubleshooting', { slug: 'changelog', badge: 'new' }],
+        },
+      ],
+    }),
+  ],
+})

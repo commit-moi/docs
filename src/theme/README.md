@@ -136,6 +136,8 @@ src/theme/
    │
    │  ── for use in content ──
    ├── Card.astro                icon card, with or without a link
+   ├── IndexList.astro           two columns of hairline rows
+   ├── IndexRow.astro            one such row: title + description, one baseline
    ├── TrustBand.astro           one proof line as a rule between sections
    └── Icon.astro                the Lucide glyphs the docs use, vendored
 ```
@@ -164,10 +166,19 @@ import { Card, TrustBand } from '@theme/components';
   </Card>
 </CardGrid>
 
+<IndexList>
+  <IndexRow title="Changelog" href="/changelog/">What shipped, newest first.</IndexRow>
+</IndexList>
+
 <TrustBand href="/your-data-and-github/" cta="Your data & GitHub">
   If commit.moi disappeared tomorrow, nothing happens to your tasks.
 </TrustBand>
 ```
+
+**Cards lead, rows list.** `<CardGrid>` + `<Card>` for the sections a page wants
+you to start with; `<IndexList>` + `<IndexRow>` for the rest. Giving both the
+same weight flattens the page — that difference is the whole point of having
+two.
 
 `@theme/*` is the tsconfig path alias to `src/theme/*`. Everything else —
 `<Aside>`, `<Steps>`, `<Tabs>`, `<CardGrid>`, `<FileTree>` — is Starlight's own

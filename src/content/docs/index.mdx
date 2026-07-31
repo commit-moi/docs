@@ -15,7 +15,7 @@ hero:
 ---
 
 import { CardGrid } from '@astrojs/starlight/components';
-import { Card, TrustBand } from '@theme/components';
+import { Card, IndexList, IndexRow, TrustBand } from '@theme/components';
 
 ## Start here
 
@@ -41,23 +41,11 @@ import { Card, TrustBand } from '@theme/components';
 
 ## Everything else
 
-<CardGrid>
-  <Card title="Email capture" icon="mail" href="/email-capture/">
-    Forward anything to assistant@commit.moi.
-  </Card>
-  <Card title="Keyboard shortcuts" icon="keyboard" href="/keyboard-shortcuts/">
-    ⌘K, and the ten keys that matter.
-  </Card>
-  <Card title="Your data & GitHub" icon="shield-check" href="/your-data-and-github/">
-    What we store. What we never touch.
-  </Card>
-  <Card title="Account & settings" icon="settings" href="/account-and-settings/">
-    Theme, dates, timezone, signing out.
-  </Card>
-  <Card title="Troubleshooting" icon="life-buoy" href="/troubleshooting/">
-    When GitHub is unreachable or a write fails.
-  </Card>
-  <Card title="Changelog" icon="scroll-text" href="/changelog/">
-    What shipped, newest first.
-  </Card>
-</CardGrid>
+<IndexList>
+  <IndexRow title="Email capture" href="/email-capture/">Forward anything to assistant@commit.moi.</IndexRow>
+  <IndexRow title="Keyboard shortcuts" href="/keyboard-shortcuts/">⌘K, and the ten keys that matter.</IndexRow>
+  <IndexRow title="Your data & GitHub" href="/your-data-and-github/">What we store. What we never touch.</IndexRow>
+  <IndexRow title="Account & settings" href="/account-and-settings/">Theme, dates, timezone, signing out.</IndexRow>
+  <IndexRow title="Troubleshooting" href="/troubleshooting/">When GitHub is unreachable or a write fails.</IndexRow>
+  <IndexRow title="Changelog" href="/changelog/">What shipped, newest first.</IndexRow>
+</IndexList>

@@ -2,6 +2,7 @@
   "name": "commit-moi-docs",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.5.3",
   "type": "module",
   "scripts": {
     "dev": "astro dev",

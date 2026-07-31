@@ -256,11 +256,13 @@
   /* ─────────── trust band (<TrustBand>) ───────────
      A proof line as a quiet rule between sections. One per page, at most.
      The text is a <div> holding MDX's own <p>, so the type is set one level
-     down — wrapping a slot in <p> nests paragraphs. The CTA is matched as a
+     down — wrapping a slot in <p> nests paragraphs. Family and size sit on the
+     WRAPPER so that `70ch` is measured in Lora 17px, the font the line is
+     actually set in; the paragraph inherits both. The CTA is matched as a
      DIRECT child so a link inside the line keeps prose styling. */
   .cm-band { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 22px 0; margin-block: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
-  .sl-markdown-content .cm-band-text { max-width: 70ch; }
-  .sl-markdown-content .cm-band-text p { font-family: var(--font-display); font-size: 17px; font-weight: 400; letter-spacing: var(--tracking-tight); line-height: var(--leading-snug); color: var(--fg2); margin: 0; }
+  .sl-markdown-content .cm-band-text { font-family: var(--font-display); font-size: 17px; max-width: 70ch; }
+  .sl-markdown-content .cm-band-text p { font-family: inherit; font-size: inherit; font-weight: 400; letter-spacing: var(--tracking-tight); line-height: var(--leading-snug); color: var(--fg2); margin: 0; }
   .sl-markdown-content .cm-band-text p + p { margin-top: 10px; }
   .sl-markdown-content .cm-band > a { font-family: var(--font-ui); font-size: 13px; color: var(--accent); text-decoration: none; margin-inline-start: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
   .sl-markdown-content .cm-band > a:hover { text-decoration: underline; text-underline-offset: 3px; }

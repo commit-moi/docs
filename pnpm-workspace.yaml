@@ -1,0 +1,9 @@
+# pnpm 11 refuses to install when a dependency's build script is neither
+# approved nor denied (ERR_PNPM_IGNORED_BUILDS), so the two that need one are
+# listed here. Same mechanism devapp uses.
+#
+#   sharp   — Astro's image service; fetches its platform binary on install
+#   esbuild — Vite's bundler; installs its platform binary on install
+allowBuilds:
+  esbuild: true
+  sharp: true

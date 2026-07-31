@@ -100,7 +100,10 @@
   .content-panel { padding: 32px 24px; border-top: 0; }
   .content-panel + .content-panel { border-top: 1px solid var(--border); }
   @media (min-width: 50rem) { .content-panel { padding: 40px 40px 48px; } }
-  .sl-container { --sl-content-margin-inline: 0; }
+  /* Flush beside the sidebar on article pages — but the splash home has no
+     sidebar, and there Starlight's centring is what we want. Same condition as
+     .site-title above. */
+  html[data-has-sidebar] .sl-container { --sl-content-margin-inline: 0; }
 
   /* ─────────── page title (Lora, the only serif in the body) ─────────── */
   .cm-page-header { display: flex; flex-direction: column; gap: 10px; }
@@ -290,6 +293,22 @@
   .sl-markdown-content .cm-card-body > :last-child { margin-bottom: 0; }
   /* Above the stretched overlay, so a link in the body stays clickable. */
   .sl-markdown-content .cm-card-body a { position: relative; z-index: 1; }
+
+  /* ─────────── index list (<IndexList> / <IndexRow>) ───────────
+     The light counterpart to the card grid: a hairline row, title and
+     description on one baseline, no frame, no icon, no arrow. Cards LEAD a
+     page; rows LIST what is left. Same stretched-link mechanism as the card. */
+  .sl-markdown-content .cm-index { display: grid; grid-template-columns: 100%; gap: 0 40px; }
+  @media (min-width: 50rem) { .sl-markdown-content .cm-index { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .sl-markdown-content .cm-index-row { position: relative; display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .sl-markdown-content .cm-index-row:has(.cm-index-link:focus-visible) { outline: 2px solid var(--accent-mid); outline-offset: 2px; }
+  .sl-markdown-content .cm-index-link { flex: none; font-family: var(--font-ui); font-size: 15px; font-weight: 500; color: var(--fg1); text-decoration: none; transition: color var(--dur) var(--ease); }
+  .sl-markdown-content .cm-index-link::after { content: ''; position: absolute; inset: 0; }
+  .sl-markdown-content .cm-index-link:focus-visible { outline: none; }
+  .sl-markdown-content .cm-index-row:hover .cm-index-link { color: var(--accent); }
+  .sl-markdown-content .cm-index-desc { min-width: 0; font-size: 13px; line-height: var(--leading-snug); color: var(--fg3); }
+  .sl-markdown-content .cm-index-desc p { margin: 0; }
+  .sl-markdown-content .cm-index-desc a { position: relative; z-index: 1; }
 
   /* ─────────── motion ─────────── */
   @media (prefers-reduced-motion: reduce) { * { transition-duration: 1ms !important; animation-duration: 1ms !important; } }

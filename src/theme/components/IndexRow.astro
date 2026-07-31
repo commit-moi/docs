@@ -1,0 +1,20 @@
+---
+/* One row of an <IndexList>: title and description on a single baseline, a
+   hairline under it, no frame, no icon, no arrow.
+
+   Deliberately NOT a variant of <Card>: the two say different things about a
+   section's weight, and a variant would have to silently ignore `icon`.
+   Shares the card's stretched-link mechanism — the anchor is on the title and
+   covers the row, so a link in the description still works. */
+interface Props {
+  title: string
+  href: string
+}
+
+const { title, href } = Astro.props
+---
+
+<div class="cm-index-row">
+  <a class="cm-index-link" href={href}>{title}</a>
+  <div class="cm-index-desc"><slot /></div>
+</div>

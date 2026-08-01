@@ -150,6 +150,13 @@
   .content-panel { padding: 32px 24px; border-top: 0; }
   .content-panel + .content-panel { border-top: 1px solid var(--border); }
   @media (min-width: 50rem) { .content-panel { padding: 44px 64px 52px; } }
+  /* Splash pages get their inline padding from .sl-container (--sl-content-pad-x),
+     so .content-panel's is a SECOND one, sitting outside the 1390px cap. Above
+     ~1518px it is absorbed by the gutter and nothing shows; below that it eats
+     143px out of the column, and the page never reaches its design width on a
+     1370px screen at all. Article pages keep it — there the column comes from
+     --docs-content-w and the inset is the gap to the rail. */
+  html:not([data-has-sidebar]) .content-panel { padding-inline: 0; }
   /* Flush beside the sidebar on article pages — but the splash home has no
      sidebar, and there Starlight's centring is what we want. Same condition as
      .site-title above. */

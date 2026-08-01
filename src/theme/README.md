@@ -99,6 +99,13 @@ Two width facts worth knowing:
   - `--sl-content-width` sizes the INNER container, so the value you set **is**
     the text column. The 20px padding is a separate declaration on
     `.sl-container`; without it the column would be the full 1390px.
+  - `.content-panel`'s inline padding is switched OFF on splash pages. It would
+    be a second inset outside the cap — invisible above ~1518px, where the gutter
+    absorbs it, and 143px out of the column below that. Article pages keep it.
+  - **Verify width changes across several window widths, not one.** Three review
+    rounds passed at 2000px while the page was 93px too narrow at 1440px and
+    never reached its design width at 1370px. A no-overflow check is not a
+    geometry check.
 
 ### Keeping tokens.css in sync
 

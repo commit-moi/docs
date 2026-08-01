@@ -347,11 +347,17 @@
       max-width: none;
       margin-inline-start: -64px;                                  /* .content-panel inset */
       margin-inline-end: calc(-1 * (64px + var(--docs-toc-w)));    /* inset + TOC column */
+      /* Give the inset back on the inside. Stepping out of the content column
+         moved the box, not the text: without this the notice starts on the rail
+         edge and the credit ends on the window edge, where the last characters
+         read as cut off. The spec insets both by 64px — content 312 to 1916 in
+         a 248-to-1980 box. */
+      padding-inline: 64px;
     }
   }
   @media (max-width: 71.99rem) {
     /* No TOC below 72rem — only the panel inset is left to give back. */
-    [data-has-sidebar] .cm-footer { margin-inline-end: -64px; }
+    [data-has-sidebar] .cm-footer { margin-inline-end: -64px; padding-inline: 64px; }
   }
   /* Deterministic reflow: brand beside the links above 62rem, stacked below.
      `space-between` + wrap put the third column in an unpredictable place — at

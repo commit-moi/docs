@@ -10,11 +10,8 @@ export default defineConfig({
       description: 'The user guide for commit.moi — your life, organized at last.',
       // The theme supplies the wordmark lockup, so no `logo` is needed.
       favicon: '/favicon.svg',
-      // Leser schlagen Korrekturen gegen die Arbeitslinie vor, nie gegen `main` —
-      // von dort wird erst nach Prüfung promoted. Der Wert ist bewusst eine
-      // Konstante und nicht vom bauenden Branch abgeleitet: so tragen `develop`
-      // und `main` dieselbe Datei und der Merge bleibt konfliktfrei.
-      editLink: { baseUrl: 'https://github.com/commit-moi/docs/edit/develop/' },
+      // No `editLink` on purpose. This is published user documentation, not a
+      // wiki — corrections come through us, not through drive-by pull requests.
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/commit-moi' }],
       // English only at launch; add `locales` when that changes.
       // Search is Pagefind (Starlight's default) — the theme restyles it.
@@ -27,7 +24,7 @@ export default defineConfig({
           trustLine: 'Nothing lives behind our UI that you can’t see on github.com.',
         }),
       ],
-      // Sidebar labels are kept short on purpose — the rail is 220px, the
+      // Sidebar labels are kept short on purpose — the rail is 248px, the
       // app's own sidebar width.
       sidebar: [
         {

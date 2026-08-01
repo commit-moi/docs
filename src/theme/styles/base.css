@@ -336,11 +336,22 @@
      TOC column on the right. Splash pages are untouched — no rail, no TOC, and
      the footer there is already as wide as the page box. */
   @media (min-width: 50rem) {
+    /* Lift the prose cap for the container that holds the footer only, so the
+       footer's `width: auto` resolves against .content-panel's inner box instead
+       of the 1012px text column. Then the negative margins carry it out over the
+       panel padding and the TOC column. No `vw` anywhere: a viewport unit counts
+       the scrollbar and would push the bar past the window edge. */
+    [data-has-sidebar] .sl-container:has(> .cm-footer) { max-width: none; }
     [data-has-sidebar] .cm-footer {
-      margin-inline-start: -64px;              /* the .content-panel inset above 50rem */
-      width: calc(100vw - var(--docs-sidebar-w));
+      width: auto;
       max-width: none;
+      margin-inline-start: -64px;                                  /* .content-panel inset */
+      margin-inline-end: calc(-1 * (64px + var(--docs-toc-w)));    /* inset + TOC column */
     }
+  }
+  @media (max-width: 71.99rem) {
+    /* No TOC below 72rem — only the panel inset is left to give back. */
+    [data-has-sidebar] .cm-footer { margin-inline-end: -64px; }
   }
   /* Deterministic reflow: brand beside the links above 62rem, stacked below.
      `space-between` + wrap put the third column in an unpredictable place — at

@@ -84,8 +84,13 @@
   #starlight__search { --pagefind-ui-primary: var(--accent); --pagefind-ui-text: var(--fg1); --pagefind-ui-background: var(--surface); --pagefind-ui-border: var(--border); --pagefind-ui-font: var(--font-ui); --pagefind-ui-border-radius: var(--radius-md); }
 
   /* ─────────── social + theme select ─────────── */
-  .social-icons a { color: var(--fg3); transition: color var(--dur) var(--ease); }
-  .social-icons a:hover { color: var(--accent); }
+  /* Starlight's social set is hidden in the header: its GitHub glyph is the
+     octocat, and the brand's mark for GitHub is Lucide's git-commit-horizontal
+     (same as the app, the specs and the footer). Header.astro renders the link
+     with the house glyph; the set still shows anywhere else it is used. */
+  header.header .social-icons { display: none; }
+  .cm-repo-link { display: flex; align-items: center; flex: none; color: var(--fg3); transition: color var(--dur) var(--ease); }
+  .cm-repo-link:hover { color: var(--accent); }
   /* Light-only product: the toggle is removed, not just hidden. */
   starlight-theme-select, .header starlight-theme-select { display: none; }
 
@@ -359,7 +364,7 @@
      with the rest of the docs chrome. Same rule for every replaced component. */
   .hero { display: grid; grid-template-columns: 100%; align-items: center; gap: 32px; padding-block: 24px 8px; }
   .hero .copy { text-align: center; }
-  .hero h1 { font-family: var(--font-display); font-size: clamp(32px, 5vw, 44px); font-weight: 400; letter-spacing: var(--tracking-hero); line-height: var(--leading-tight); color: var(--fg1); margin: 0; }
+  .hero h1 { font-family: var(--font-display); font-size: clamp(36px, 2.6vw, 44px); font-weight: 400; letter-spacing: var(--tracking-hero); line-height: var(--leading-tight); color: var(--fg1); margin: 0; }
   .hero h1 em, .hero h1 .accent { font-style: italic; color: var(--accent); }
   .hero .tagline { font-family: var(--font-ui); font-size: var(--text-md); line-height: var(--leading-body); color: var(--fg3); margin-top: 14px; }
   .hero .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
@@ -501,17 +506,18 @@
       1350. The signed-off geometry is a 1390px box with 20px padding and a
       1350px column, which takes both declarations below.
 
-   3. The cap is min(86.875rem, 88vw), not a bare rem — see the note on the
-      declaration itself. 80vw was measured too and rejected: it breaks the
-      headline onto two lines at 1370px.
+   3. The cap is min(86.875rem, 76vw), not a bare rem — see the note on the
+      declaration itself. 76vw was chosen from seven rendered variants; it gives
+      164px of margin on the 1370px target device where 88vw gave 82px. The
+      hero headline clamps so it still holds one line at that width.
 
    Article pages are unaffected: they use --docs-content-w. */
 html:root:not([data-has-sidebar]) {
-  /* min(1390px, 88vw): a fixed 1390 needs a 1430px window to keep any margin, and
+  /* min(1390px, 76vw): a fixed 1390 needs a 1430px window to keep any margin, and
      a 13" MacBook Air gives ~1370 usable — so the fixed box ran edge to edge there
      permanently and the page never looked as drawn on that screen. The min() is
      load-bearing; simplifying it back to a bare 86.875rem re-breaks it. */
-  --sl-content-width: min(86.875rem, 88vw); /* 1390px cap — the page box */
+  --sl-content-width: min(86.875rem, 76vw); /* 1390px cap — the page box */
 }
 html:root:not([data-has-sidebar]) .sl-container {
   padding-inline: 20px; /* leaves a 1350px content column */

@@ -1,14 +1,27 @@
 ---
 import Default from '@astrojs/starlight/components/Header.astro'
 import config from 'virtual:starlight-theme-commit-moi/config'
+import Icon from './Icon.astro'
 
-/* Starlight's header is WRAPPED, not replaced: its search mount, social icons
-   and mobile menu button are fiddly and change between versions, and none of
-   them need restyling beyond what base.css already does. The one addition is
-   the way back to the app. */
+/* Starlight's header is WRAPPED, not replaced: its search mount and mobile menu
+   button are fiddly and change between versions, and neither needs restyling
+   beyond what base.css already does.
+
+   Its SOCIAL icons are the exception. Starlight renders `social: [{ icon:
+   'github' }]` with its own octocat mark; the brand uses Lucide's
+   `git-commit-horizontal` for GitHub everywhere — app, specs, footer — so the
+   octocat would be the only foreign glyph on the page. base.css hides Starlight's
+   set and this renders the link with the house glyph instead. */
 ---
 
 <Default><slot /></Default>
+
+{config.repoUrl && (
+  <a class="cm-repo-link" href={config.repoUrl} title="GitHub">
+    <Icon name="git-commit-horizontal" size={18} />
+    <span class="sr-only">GitHub</span>
+  </a>
+)}
 
 {config.appUrl && (
   <>

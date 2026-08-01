@@ -502,10 +502,23 @@
       1350. The signed-off geometry is a 1390px box with 20px padding and a
       1350px column, which takes both declarations below.
 
+   3. The cap is min(86.875rem, 88vw), not a bare rem — see the note on the
+      declaration itself. 80vw was measured too and rejected: it breaks the
+      headline onto two lines at 1370px.
+
    Article pages are unaffected: they use --docs-content-w. */
 html:root:not([data-has-sidebar]) {
-  --sl-content-width: 86.875rem; /* 1390px — the page box */
+  /* min(1390px, 88vw): a fixed 1390 needs a 1430px window to keep any margin, and
+     a 13" MacBook Air gives ~1370 usable — so the fixed box ran edge to edge there
+     permanently and the page never looked as drawn on that screen. The min() is
+     load-bearing; simplifying it back to a bare 86.875rem re-breaks it. */
+  --sl-content-width: min(86.875rem, 88vw); /* 1390px cap — the page box */
 }
 html:root:not([data-has-sidebar]) .sl-container {
   padding-inline: 20px; /* leaves a 1350px content column */
+  /* Starlight only sets --sl-content-margin-inline: auto from 72rem up. While the
+     box filled the window that was moot; with the 88vw cap there is always 12%
+     left over, and below 1152px it all landed on the right. Centre it at every
+     width. */
+  margin-inline: auto;
 }

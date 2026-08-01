@@ -87,8 +87,11 @@ and paper). No new hex enters the system.
 Two width facts worth knowing:
 
 - **Article pages** use `--docs-content-w` (820px), flush beside the rail.
-- **Splash pages** (no sidebar) are centred, with a **1390px box · 20px padding ·
-  1350px content column**. Starlight sets their width from an UNLAYERED rule in
+- **Splash pages** (no sidebar) are centred, with a **min(1390px, 88vw) box ·
+  20px padding · 1350px content column at full width**. The `88vw` is not
+  decoration: a fixed 1390 needs a 1430px window to keep any margin, and a 13"
+  MacBook Air gives ~1370 usable, so the page ran edge to edge there in every
+  window position. Do not simplify it back to a bare `86.875rem`. Starlight sets their width from an UNLAYERED rule in
   `Page.astro`, so the theme's override sits at the very bottom of `base.css`,
   **outside** `@layer commit-moi` — the only rule in the theme that does. Two
   things about it are load-bearing:
@@ -99,6 +102,9 @@ Two width facts worth knowing:
   - `--sl-content-width` sizes the INNER container, so the value you set **is**
     the text column. The 20px padding is a separate declaration on
     `.sl-container`; without it the column would be the full 1390px.
+  - `.sl-container` gets `margin-inline: auto` on splash pages. Starlight only
+    centres from 72rem up; with the 88vw cap there is always leftover space, and
+    below 1152px all of it collected on the right.
   - `.content-panel`'s inline padding is switched OFF on splash pages. It would
     be a second inset outside the cap — invisible above ~1518px, where the gutter
     absorbs it, and 143px out of the column below that. Article pages keep it.

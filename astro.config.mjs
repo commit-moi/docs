@@ -13,6 +13,10 @@ export default defineConfig({
       // No `editLink` on purpose. This is published user documentation, not a
       // wiki — corrections come through us, not through drive-by pull requests.
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/commit-moi' }],
+      // Only the second level, so every page's contents list looks the same.
+      // Starlight still prepends its automatic "Overview" entry whenever a page
+      // opens with prose before the first heading.
+      tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 2 },
       // English only at launch; add `locales` when that changes.
       // Search is Pagefind (Starlight's default) — the theme restyles it.
       // Light only: no theme toggle is rendered.

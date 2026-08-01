@@ -12,7 +12,6 @@
 @layer commit-moi {
   /* ─────────── page frame ─────────── */
   body { background: var(--bg); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-  html { scrollbar-gutter: stable; }
   :focus-visible { outline: 2px solid var(--accent-mid); outline-offset: 2px; }
 
   /* ─────────── header ───────────
